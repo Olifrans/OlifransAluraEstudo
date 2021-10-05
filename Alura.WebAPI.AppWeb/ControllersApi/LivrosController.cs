@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 namespace Alura.WebAPI.AppWeb.ControllersApi
 //namespace Alura.WebAPI.AppWeb.Api
 {
-    public class LivrosController : Controller
+    [ApiController]
+    [Route("controller")]
+    public class LivrosController : ControllerBase
     {
         private readonly IRepository<Livro> _repo;
 
@@ -20,19 +22,19 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
         }
 
 
-        [HttpGet]
+        [HttpGet("{id}")] //Consultar um Livro cadastrado
         public IActionResult Recuperar(int id)
         {
             var model = _repo.Find(id);
             if (model == null)
             {
-                return NotFound();
+                return NotFound(); //Código de status (404)-->not found
             }
-            return Json(model.ToModel());
+            return Ok(model.ToModel()); //Código de status (200)--> Ok - Retornando um livro no formato Json
         }
 
 
-        [HttpPost]
+        [HttpPost] //Incluir um novo Livro
         public IActionResult Incluir([FromBody] LivroUpload model)
         {
             if (ModelState.IsValid)
@@ -41,13 +43,13 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
                 _repo.Incluir(livro);
 
                 var uri = Url.Action("Recuperar", new { id = livro.Id });
-                return Created(uri, livro); //Código 201
+                return Created(uri, livro); //Código de status (201)--> Created - Retornando um novo livro no formato Json, e mais uma entrada no cabeçalho chamada de location com o endereço para realizar a consulta do novo livro
             }
-            return BadRequest(); //Código 400
+            return BadRequest(); //Código de status (400)-->BadRequest
         }
 
 
-        [HttpPost]
+        [HttpPut] //Altera um Livro cadastrado
         public IActionResult Alterar([FromBody] LivroUpload model)
         {
             if (ModelState.IsValid)
@@ -61,22 +63,22 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
                         .FirstOrDefault();
                 }
                 _repo.Alterar(livro);
-                return Ok(); //Código 200
+                return Ok(); //Post com objeto Json no corpo, Código de status (200)--> OK 
             }
-            return BadRequest(); //Código 400
+            return BadRequest(); //Código de status (400)-->BadRequest
         }
 
 
-        [HttpPost]
+        [HttpDelete("{id}")] //Deleta um Livro cadastrado
         public IActionResult Excluir(int id)
         {
             var model = _repo.Find(id);
             if (model == null)
             {
-                return NotFound();
+                return NotFound(); //Código de status(404)-- > NotFound
             }
             _repo.Excluir(model);
-            return NoContent(); //Código 204
+            return NoContent(); //Post livro com o id  //Código de status (203)--> Ok  obs: verifica o código 204
         }
     }
 }
