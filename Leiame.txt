@@ -1,0 +1,9 @@
+O que aprendemos?
+PRÓXIMA ATIVIDADE
+
+Nesta aula, aprendemos:
+
+Arquitetura da aplicação
+Inicio de roteamentos
+Como retornar JSON
+Outras maneiras de retornar JSON

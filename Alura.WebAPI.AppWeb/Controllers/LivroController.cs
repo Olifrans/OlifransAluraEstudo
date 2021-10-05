@@ -11,6 +11,7 @@ namespace Alura.ListaLeitura.WebApp.Controllers
     {
         private readonly IRepository<Livro> _repo;
 
+
         public LivroController(IRepository<Livro> repository)
         {
             _repo = repository;
@@ -21,6 +22,7 @@ namespace Alura.ListaLeitura.WebApp.Controllers
         {
             return View(new LivroUpload());
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -48,16 +50,62 @@ namespace Alura.ListaLeitura.WebApp.Controllers
             return File("~/images/capas/capa-vazia.png", "image/png");
         }
 
-        [HttpGet]
-        public IActionResult Detalhes(int id)
+
+        
+
+
+
+
+        // Obsservção testar o retorno dos metodos no brouwser
+        public Livro RecuperaLivro(int id) //Metodo especifico de busca no repositorio --> Também pode ser usado por uma Action e recupera a imagem da capa do livro
         {
-            var model = _repo.Find(id);
+            return _repo.Find(id);
+        }
+
+        [HttpGet]
+        public IActionResult Detalhes(int id) //ActionResult com respota de objeto no formato HTML-Result, para navegadores e usuarios finais
+        {
+            //var model = _repo.Find(id);
+            var model = RecuperaLivro(id); //Isolamento de busca no repositorio em um metodo especifico
             if (model == null)
             {
                 return NotFound();
             }
             return View(model.ToModel());
         }
+
+
+        [HttpGet]
+        public IActionResult DetalhesSemHTML(int id) //ActionResult com respota de objeto no formato Json-Result,  para consumo de desenvolvedores
+        {
+            //var model = _repo.Find(id);
+            var model = RecuperaLivro(id); //Isolamento de busca no repositorio em um metodo especifico
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return Json(model.ToModel());
+        }
+
+        public ActionResult<LivroUpload> DetalhesJson(int id) //Metodo alternativo que entrega outros modelos de status desacoplado do DotNet --> Também pode ser usado por uma Action e recupera a imagem da capa do livro
+        {
+            var model = RecuperaLivro(id);
+            if (model == null)
+            {
+                return NotFound();
+            }
+            return model.ToModel();
+        }
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
