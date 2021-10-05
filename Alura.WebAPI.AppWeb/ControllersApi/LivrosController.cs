@@ -19,6 +19,7 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
             _repo = repository;
         }
 
+
         [HttpGet]
         public IActionResult Recuperar(int id)
         {
@@ -30,8 +31,9 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
             return Json(model.ToModel());
         }
 
+
         [HttpPost]
-        public IActionResult Incluir(LivroUpload model)
+        public IActionResult Incluir([FromBody] LivroUpload model)
         {
             if (ModelState.IsValid)
             {
@@ -41,12 +43,12 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
                 var uri = Url.Action("Recuperar", new { id = livro.Id });
                 return Created(uri, livro); //Código 201
             }
-            return BadRequest();
+            return BadRequest(); //Código 400
         }
 
 
         [HttpPost]
-        public IActionResult Alterar(LivroUpload model)
+        public IActionResult Alterar([FromBody] LivroUpload model)
         {
             if (ModelState.IsValid)
             {
@@ -61,8 +63,9 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
                 _repo.Alterar(livro);
                 return Ok(); //Código 200
             }
-            return BadRequest();
+            return BadRequest(); //Código 400
         }
+
 
         [HttpPost]
         public IActionResult Excluir(int id)
@@ -73,7 +76,7 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
                 return NotFound();
             }
             _repo.Excluir(model);
-            return NoContent(); //Código 203
+            return NoContent(); //Código 204
         }
     }
 }
