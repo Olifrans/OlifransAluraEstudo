@@ -74,7 +74,7 @@ namespace Alura.ListaLeitura.WebApp.Controllers
             return View(model.ToModel());
         }
 
-
+        /*
         [HttpGet]
         public IActionResult DetalhesSemHTML(int id) //ActionResult com respota de objeto no formato Json-Result,  para consumo de desenvolvedores
         {
@@ -86,6 +86,8 @@ namespace Alura.ListaLeitura.WebApp.Controllers
             }
             return Json(model.ToModel());
         }
+        */
+
 
         public ActionResult<LivroUpload> DetalhesJson(int id) //Metodo alternativo que entrega outros modelos de status desacoplado do DotNet --> Também pode ser usado por uma Action e recupera a imagem da capa do livro
         {
@@ -96,11 +98,6 @@ namespace Alura.ListaLeitura.WebApp.Controllers
             }
             return model.ToModel();
         }
-
-
-
-
-
 
 
 
