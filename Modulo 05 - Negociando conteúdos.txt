@@ -290,6 +290,42 @@ Selecione uma alternativa
 
 
 
+06 - Adicionando formatos
+Vimos que também podemos adicionar formatadores próprios em nosso projeto. Depois de criarmos a classe responsável, como podemos adicioná-la efetivamente como um formatador?
+
+Selecione uma alternativa
+Através do método AddMvc(), devemos passar um parâmetro utilizando a opção OutputFormatters e adicionar a classe responsável pelo nosso formatador.
+
+
+
+
+07 - Consolidando o seu conhecimento
+Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com a próxima aula.
+
+
+
+08 - O que aprendemos?
+Neste capítulo, aprendemos:
+Como negociar tipos de conteúdo com o servidor
+Como formatar um XML para nossa resposta
+Como nomear os XML's recebidos
+Como criar formatadores customizados
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

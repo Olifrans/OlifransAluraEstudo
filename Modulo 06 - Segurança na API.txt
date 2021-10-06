@@ -1,0 +1,126 @@
+Modulo 06 - Segurança na API
+
+
+
+01 - Protegendo nossa API
+[0:00] Olha só, agora a gente já tem um caminho bastante longo, percorremos alguma coisa na nossa WebAPI. Já estamos disponibilizando nossa API num segmento de rota separado para poder mostrar para o desenvolvedor de terceiros, de aplicação de terceiro, que a API fica separada da parte de aplicação Web.
+
+[0:27] Mas está faltando agora a gente proteger, colocar a segurança nessa API, mas temos algumas operações de Crud lá e eu posso fazer um delete sem ter nenhum usuário autenticado ali, sem nenhuma identificação de usuário, isso aí não está muito bom não.
+
+[0:46] Então, eu aqui nos controladores da API, que eu vou fazer é colocar aqui, aquela anotação Authorize, aquele atributo Authorize. Eu vou agora dizer que esse controlador, todas as operações, todas as Actions que estão aqui nesse controlador estão protegidos.
+
+[1:13] A mesma coisa que tem aqui no nosso Livro Controller, mesma coisa que eu estou fazendo do Livro Controller. Vou fazer a mesma coisa para o Lista de Leitura também, eu quero protegê-la também Authorize. Cortei aqui, vamos compilar, vamos testar esse cara.
+
+[1:37] Primeira coisa que eu quero fazer é testá-lo, testar a nossa aplicação aqui no navegador. Então, navegador aqui, eu consigo enxergar aplicação, já estou logado, ou seja, já tenho autenticação aqui. Então vou copiar esse cara aqui, vou criar uma nova aba e vou na API buscar o Livro mil e oito. Funciona, tudo tranquilo, belezinha, porque já está autenticado.
+
+[2:17] Olha só, mas agora se eu testar isso, essa mesma URL que vocês estão vendo aqui, localhost tal, API Livros mil e oito, se eu testar essa URL, essa URI, de vez em quando eu me perco aqui no Postman o que vai acontecer? Vou apertar o send aqui e ele me deu um ok, olha só que legal, me deu um duzentos, ok, só que o retorno foi um HTML. Que interessante, não é gente?
+
+[2:58] Quem é esse cara aqui mesmo hein? Que é esse HTML aqui? Já que foi um duzentos, ok. E vocês vão ver que esse HTML é o formulário de login. Formulário de login. Estranho, não é? Olha só o que eu vou fazer aqui, na aplicação, no navegador, na aplicação Web eu vou usar aquela rota usuário, barra logout, para me desconectar da aplicação. E vou tentar fazer agora uma consulta API, usando API Livros mil e oito, vou apertar enter e aquele Html que foi retornado no Postman, está sendo retornado aqui.
+
+[3:50] Então gente o que nós estamos recebendo aqui, o que está acontecendo é que nós ainda estamos acoplados, nossa aplicação, nossa API ainda está acoplada à solução da Web App. Portanto que quando eu consumo algum serviço, algum endpoint na minha API, eu sou enviado para a minha aplicação Web, para o HTML.
+
+[4:21] Então a gente vai ver agora o que a gente tem que fazer para nos desassociarmos, para ficar aplicação API completamente desacoplada dessa aplicação Web. Afinal de contas, a API ela vai ser consumida por desenvolvedor de terceiros que pode estar na organização diferente. Numa internet diferente, numa rede diferente e ele não vai conseguir enxergar, pode não conseguir enxergar essa aplicação Web aqui.
+
+[4:57] Então, a gente tem que achar uma maneira de desconectar nossa API da aplicação Web. Então nossa aula é a partir disso, como é que a gente desacopla essa API. Vamos lá?
+
+
+
+
+
+02 - Diferenças entre as estratégias de segurança
+[0:00] Então, minha gente eu queria mostrar pra vocês aqui um pouco, oque que está acontecendo, por baixo dos panos aqui e que está fazendo com que essa API, ela esteja ainda acoplada a solução de segurança da nossa aplicação tradicional o WEB API.
+
+[0:21] Então, primeiro como que é hoje, como é que está hoje implementada a segurança na nossa aplicação tradicional.
+
+[0:27] Então, estou com um formulário de LOGIN aqui, eu vou fazer o LOGIN.
+
+[00:00:33] Beleza, fiz o LOGIN e agora eu quero mostrar para vocês com a ferramenta do desenvolvedor apertei Control, SHIFT, I, aqui no Chrome, beleza, e na abinha de rede eu vou apertar F5 aqui, para poder logar todas as requisições que foram feitas, e eu estou interessado na requisição principal, que chama rota Home Index, beleza.
+
+[0:59] Vou clicar aqui nessa rota e vou dar um zoom para vocês, para vocês verem que aqui nós temos alguns cabeçalhos, o cabeçalho da requisição da resposta, mas também nós temos aqui, uma aba onde está escrito Cookies, OK, são os Cookies que estão sendo enviados na requisição.
+
+[01:20] Você já aprendeu, nos cursos anteriores de ASP NET, que uma das maneiras de você, garantir, promover a segurança da sua aplicação, é utilizando seção.
+
+[1:36] A seção ela agrupa as requisições de um mesmo navegador, de um mesmo cliente, agrupa essas requisições, sob um identificador, então eu tenho um Section ID, beleza, e esse Section ID está aqui olha, beleza, percebam que ele está na parte de requisição e eu vou falar sobre isso daqui a pouco.
+
+[02:05] Mas esse número que está aqui é o identificador da seção que está sendo mantida pelo Identity, que é lá o nosso provedor de segurança de autenticação, tecnologia da Microsoft, tudo bem.
+
+[2:21] E esse Cookie ele está sendo enviado como requisição, lá para a nossa aplicação, a nossa aplicação valida esse Section ID e permite ou não a requisição, que foi solicitada ai.
+
+[2:39] Então, eu fiz um diagrama aqui para mostrar um pouquinho isso, de como é essa estratégia de segurança baseada em Cookies e seção, beleza.
+
+[02:50] Então, olha só, a gente fez lá um LOGIN, submetemos um formulário de LOGIN usando o Post, usuário e LOGIN, passando usuário e senha e a aplicação usando Identity validou esse cara e gerou um Section ID.
+
+[3:05] Um Section ID e colocou as informações do usuário, senha, usuário, quais são os papeis dele, se ele é o administrador, se não é, para poder dar a autorização em um banco de dados, uma base de dados, que não é a base de dados que nós estamos usando para fazer a autentificação.
+
+[3:25] É uma base de dados em memória que fica lá no processo do ASP NET, beleza.
+
+[00:03:32] Depois disso ele mandou um 200 OK com o Section ID no Cookie, beleza, no Cookie, e aí todas as próximas requisições que esse cliente enviar, ele vai enviar esse Section ID, tanto por isso que estava lá, por isso que estava como Cookie de requisição, ele estava mandando de volta esse Cookie.
+
+[00:04:06] Está mandando esse Cookie de volta, e aí o que vai acontecer é que a nossa aplicação ela irá verificar se esse identificador está lá naquela base de dados, e aí sim vai dar a autorização ou não.
+
+[4:23] Por isso que eu falei as próximas requisições ficam agrupadas, criando uma sensação que existe um estado ali, aquela aplicação tem um estado, ela conhece quem está fazendo a segunda, terceira e a quarta requisição.
+
+[4:43] E o acoplamento que eu falei, que está acontecendo, ele está acontecendo na verdade, não é só porque esta mandando HTML de volta, mas ele está acontecendo porque o servidor ele precisa, deixa eu apagar esse cara aqui, o servidor precisa para autenticar uma segunda, terceira requisição, ele precisa do Section ID para procurar informações no banco, nessa memória ali das seções, OK, então existe um acoplamento entre essas requisições, a primeira com a segunda e dai por diante, então existe esse acoplamento aqui, OK.
+
+[5:36] Qual a alternativa que nós temos, a gente viu aí que a gente quer tirar esse acoplamento e quer tornar a nossa aplicação segura ainda, mas sem esse acoplamento entre requisições, afinal de contas, uma API ela está atendendo, requisições, está expondo seus End Points, ela não precisa agrupar as requisições sobre uma pessoa, sobre uma identidade, como é o caso da seção, ela pode receber a requisição e responder, recebe nova requisição e responde, ela só precisa dizer se pode ou não pode.
+
+[6:18] Então, eu vou copiar esse diagrama aqui para mostrar a alternativa, a alternativa a esse processo, então a alternativa não usa a seção, também não usa Cookies.
+
+[6:42] Então, o que acontece quando um cliente, então aí não precisa ser o navegador, pode ser um cliente qualquer, quando ele manda essa informação, submete a informação de autenticação, a aplicação ela vai embrulhar todas as informações necessárias para uma próxima autenticação e autorização, e um cara que ficou convencionado como sendo chamado de Token.
+
+[7:19] Então, em vez de ser Cookie ele é um Token, deixa eu mudar aqui o tamanho, para ficar tudo bonitinho aqui, então quando a aplicação consegue autenticar esse cara ele embrulha tudo isso no Token e manda de volta para o cliente.
+
+[7:38] Futuras requisições, precisam enviar de volta esse Token, porém não existe nada aqui que a aplicação precise consultar, o que ela vai fazer, ela vai desembrulhar esse Token e as informações estão ali dentro.
+
+[8:00] Esse embrulho é criptografado é claro né, a gente vai ver aí quais são as soluções para isso, mas toda a informação necessária, importante para a aplicação dar a permissão para o cara estão dentro daquele Token, beleza.
+
+[8:18] Esse Token não é enviado via Cookie, ele pode ser enviado no corpo da requisição ou pode ser enviado no cabeçalho.
+
+[8:28] Então, eu vou mostrar essa solução de cabeçalho, porque a gente vai aderir essa solução nos próximos videos.
+
+[08:37] Então, eu vou no Visual Studio aqui, e vou remover essa autorização para essa lista de controle, porque eu quero mostrar pra vocês o seguinte, então suponha que essa requisição, esse ENDPOINT aqui, ele vai ser autenticado, vai ser autorizado, e a ideia é o seguinte, eu vou pegar o cabeçalho e vou guardar uma variável.
+
+[9:05] O cabeçalho da requisição aqui, guardei na variável Header, e vou fazer um teste aqui, se o cabeçalho, tiver uma chave específica, e essa chave eu vou chamar de Authorizacion, que é a chave que é utilizada para isso, se ele tiver essa chave.
+
+[9:31] Na verdade eu vou negar isso, se ele não tiver essa chave, ou seja, ele tem a chave e essa chave, vou botar aqui Header Authorizacion, e essa chave não for igual a um valor, a uma senha supersecreta que eu estou colocando aqui, se não tiver isso, o que eu vou fazer é retornar o código de Status que é conhecido, que é justamente o código de Status utilizado para requisições não autorizadas, que é o código de Status 401, tudo bem gente?.
+
+[10:24] Então, eu vou compilar essa aplicação aqui e aí o que eu vou mostrar para vocês, é o seguinte, vou mostrar a diferença então, quando eu fizer a recuperação de um livro, eu vou dar um SEND aqui, ele vai me retornar o HTML com aquele formulário de LOGIN como eu falei para vocês é uma solução que está acoplada ainda a ideia da seção, ele não está encontrando a seção, não está encontrando o Section ID enviado nessa requisição aqui, então ele retorna o formulário de LOGIN para o cara se logar, então existe esse acoplamento aí.
+
+[11:11] Agora se eu quiser fazer, recuperar uma lista, já usando, deixa eu apagar aqui para fazer de novo, recuperar aquela lista usando aquele End Point ali, e mandar essa requisição, agora eu estou tomando um erro 401 de não autorizado, OK, não autorizado aqui. Porque foi aquela implementação que eu fiz lá no nosso código, vocês viram essa implementação, uma implementação muito tosca, mas ela ilustra como que essa autorização vai ser feita, ela é feita a cada requisição, ele não vai fazer pesquisa nenhuma em uma base de dados de seção para verificar o usuário, para verificar aquela Section ID, isso garante o nosso desacoplamento.
+
+[12:13] Então, olha só, eu vou colocar um cabeçalho chamado autorização e o valor vai ser 123.
+
+[12:19] Então, vamos lá.
+
+[12:20] Vou botar um cabeçalho chamado autorização, eu quero apagar esse cara aqui, deixa eu tirar esse cara aqui.
+
+[12:41] Cara chamado autorização e vou passar 123, como valor dessa chave chamada autorização, eu vou mandar um SEND aqui, e agora ele funcionou.
+
+[12:51] Beleza gente, então toda vez que eu queira fazer uma nova requisição, é só colocar essas informações no cabeçalho da requisição.
+
+[13:07] Então, não existe esse acoplamento, você vê que aqui na minha ilustração, não existe nenhum acoplamento entre a seção ou Section ID que foi criado no momento anterior com uma requisição que foi feita em um segundo momento, a cada requisição ele vai verificar isso, é claro que esse valor que está aqui é um valor completamente esquisito, 123, não tem nenhum tipo de segurança aqui.
+
+[13:42] Então, agora a gente vai conhecer uma maneira de passar um Token, usando um determinado padrão, estamos sempre falando em padronizar a nossa API, então a gente vai usar mais um padrão para fazer a segurança baseada em Tokens na nossa API, no próximo vídeo.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
