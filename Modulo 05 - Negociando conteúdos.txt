@@ -95,6 +95,209 @@ Modulo 04 - Negociando conteúdo
 
 
 
+03 - Preparando para entregar XML
+Vimos que para que o servidor consiga atender pedidos de formato XML precisamos fazer algumas configurações em nosso projeto. Quais são elas?
+
+Selecione uma alternativa
+Instalar o pacote Microsoft.AspNetCore.Mvc.Formatters.Xml e depois configurar na classe Startup o serviço do MVC para adicionar a serialização XML através do método AddXmlSerializerFormatters().
+
+
+
+
+
+04 - Definindo o nome do XML
+Vimos que podemos definir o nome do recurso XML evitando expôr o nome da classe que representa o recurso no servidor. Qual das opções abaixo mostra como isso pode ser feito?
+
+Selecione uma alternativa
+[XmlType("Nome")]
+
+
+
+
+
+
+05 - Formatos customizados
+[0:00] Então, meus amigos, a gente viu no vídeo anterior que a gente pode agora mudar, transformar, implementar o nosso servidor uma maneira de conseguir negociar com o cliente para poder atender formatos XML.
+
+[0:15] A gente viu que a precisou instalar o pacote e configurar na classe startup o formatador específico para a XML.
+
+[0:25] Então aqui eu tô no Postman pedindo uma requisição com cabeçalho XML.
+
+[0:32] Então aqui eu estou vendo um livro no formato XML, mas você não precisa ficar restrito aos formatos que já foram implementados no Asp.NET, você pode também criar os seus próprios formatos, você pode customizar.
+
+[0:45] Suponho que a sua organização, sua empresa, seu time tem uma necessidade de um formato específico, proprietário de vocês aí, então em vez de você pedir isso na URI, você pede o recurso, só que no cabeçalho você determina que tipo de formato você quer, o ContentType.
+
+[1:08] Nesse vídeo eu quero mostrar para vocês como é que a gente pode fazer isso, criar um formato customizado na nossa API.
+
+[0:1:16] Então, que que eu quero pegar um livro no formato CSV, cujos campos são separados por vírgula ou ponto e vírgula, no meu caso aqui eu vou usar ponto e vírgula.
+
+[1:28] Então se você apertar o send aqui nossa aplicação Asp.NET não consegue negociar esse tipo de conteúdo, tranquilo?
+
+[1:36] Então ele entrega o conteúdo anterior, o conteúdo padrão que é o Json, então agora a gente vai ver como é que faz pra implementar esse formato CSV lá.
+
+[01:49] Vocês vão ver que vai ser basicamente orientação-objeto, olha lá.
+
+[1:55] Aqui no Visual Studio eu vou criar uma pasta só para poder guardar esse.
+
+[2:02] Então eu vou criar uma pasta aqui chamada, formatters, inglês maravilhoso, beleza, formata, você vai criar uma classe aqui, essa classe aqui vai ser a classe específica para formatar um livro em CSV.
+
+[2:16] Então vou chamar de LivroCsvFormatter.
+
+[2:22] E ele vai ter que herdar de um TextOutputFormatter porque é um formato de saída do tipo texto.
+
+[2:35] Não é do tipo imagem, por exemplo.
+
+[2:38] Então eu vou usar aqui, importar este namespace, Microsoft.Asp.NetCore.MVC.Formatters; e essa classe TextOutputF esse tipo de formatter é uma classe abstrata, então para isso eu preciso implementar o método que o computador está me pedindo aqui, se chama WriteResponseBodyAsyn, porque esse é o método que pode ser utilizado entregues, em programação paralela.
+
+[3:10] Então o que eu tenho que fazer aqui nesse método? Gente, o que eu tenho que fazer é escrever na resposta, no corpo da resposta o meu livro no formato CSV, tudo bem? Olha lá, eu vou vou criar aqui uma variável que vai guardar esse livro no formato CSV.
+
+[3:34] Por enquanto é uma string vazia. Beleza.
+
+[3:40] O que eu tenho que fazer no final das contas, gente, é escrever no ResponseBody.
+
+[3:47] O ResponseBody tá aqui no meu Context.HttpContext.ResponseBody, esse aqui é um stream e é aqui que eu preciso escrever.
+
+[4:01] Pra conseguir escrever neste cara aqui eu vou criar um cara que escreve em streams e eu vou pegar uma instância desse cara usando um método chamado WriterFactory.
+
+[4:16] Esse WriterFactory já vai associar a string ele quer escrever e também o encoding, qual encoding ele vai utilizar.
+
+[4:29] Então esse escritor ele vai escrever na string historinha especificando especifica o fluxo de bytes especifico do corpo da resposta.
+
+[4:38] No final das contas eu tenho que fechar, tenho que dar um close nesse cara aqui.
+
+[4:43] Então em vez de eu ter esses dois caras aqui eu vou usar aquela construção, using, e essa construção aqui garante que esse close vai ser chamado.
+
+[5:00] Vou deixar aqui um comentário para vocês poderem depois se lembrar disso.
+
+[5:05] Então eu vou ter que fazer o que? Eu aqui no escritor eu vou escrever um RightAsync, e o que eu vou escrever? O livro no formato CSV.
+
+[5:15] Agora como eu faço para converter esse livro no formato CSV? Bom, eu tenho que pegar esse livro.
+
+[5:22] Esse livro está onde? Essa instância de livro está onde? Ela tá justamente aqui, Context.Object.
+
+[5:31] Tá gravado numa propriedade, um tipo object no argumento de entrada, chamada Context.
+
+[5:37] Só que pra eu poder pegar o o título, subtítulo, o autor, pegar as informações do livro, eu preciso converter esse objeto em um objeto do tipo livro.
+
+[5:50] Então, gente, eu vou me proteger aqui fazendo uma pergunta com if, lembra que eu estou usando a classe tipo Livro/api.
+
+[6:04] Então, se for aí sim eu vou converter esse cara, vou pegar esse objeto e vou convertê-lo para um livro/api. E agora?
+
+[6:17] Agora eu vou pegar o livro, a variável livro em CSV, e vou interpolar aqui uma string, essa string eu vou colocar, livro.título; livro. subtítulo; livro.autor; e vou colocar a lista também.
+
+[6:59] Já criei o formato, só que tá dando um erro aqui porque, na verdade, esse método retorna uma task, então eu que aqui escrever, return WriteAsync.
+
+[6:54] Então tem que retornar essa task de programação paralela para quem tá chamando esse método nosso aqui.
+
+[7:05] Acabou? Será que já acabou? Nós estamos resolvidos aqui, já fizemos a conversão? Basicamente, sim,.
+
+[7:13] Então o que eu preciso fazer agora? Eu preciso dizer para minha aplicação que este formato de livros CSV está disponível.
+
+[7:19] Como é que eu faço isso? Eu vou lá na classe startup, lá no meu serviço do pipeline MVC aqui eu vou agora usar uma sobrecarga desse método AddMvc de para configurar algumas opções.
+
+[7:37] Eu vou usar um método lambda aqui, uma função lambda aqui, onde eu vou configurar a seguinte opção, Output.Formatters, porque é uma lista eu vou adicionar quem? O meu livro.
+
+[7:54] LivroCsvFormatter, ele não está sendo reconhecido porque eu preciso importá-lo, importar o seu namespace aqui.
+
+[8:11] Tudo tranquilo? Tudo favorável? Já podemos testar? Vamos ver, rufem os tambores, vou compilar aqui a aplicação, ver se está tudo funcionando, se eu esqueci algum detalhe... Compilou, agora eu vou lá no meu Postman, já tem aqui a requisição montada para eu testar, com o cabeçalho e pedindo Text CSV.
+
+[8:30] Vou mandar um send aqui e... Erro, deu um erro aqui, vamos ver.
+
+[8:38] Olha lá, 500 internal server error.
+
+[8:41] Então, olha só, deixa eu dar um zoom pra vocês verem aqui, invalid operation, operação invalida, porque nenhum tipo de mídia foi encontrado no meu livro CSV formatter.
+
+[8:57] Então, o que ele tá dizendo pra fazer? Adicione no mínimo um tipo de mídia na lista de mídias suportadas.
+
+[9:08] Vamos fazer isso, ele já me deu a dica do que o que eu tenho que fazer.
+
+[9:12] Vou dar um zoom out aqui.
+
+[9:15] Vamos lá, o que eu tenho que fazer? Eu vou criar um construtor... Criei construtor e aqui o meu TextOutputFormatter tem uma propriedade chamada, SupportedMediaTypes e eu vou adicionar um cara aqui, uma lista nisso, vou te chamar um mediatype, mas mas eu vou criar um cara... CsvMediaType.
+
+[9:48] E aqui eu vou for vou usar MediaTypeHeaderValue, é uma classe que eu uso para indicar o valor do cabeçalho para o MediaType.
+
+[10:12] E eu vou pedir pra ele parsear de uma string... Antes disso deixa eu colocar no meu using aqui, isso é importante, deixa eu dar um zoom aqui para vocês verem.
+
+[10:14] Eu estou adicionando, deixa eu subir aqui um pouquinho, eu quero adicionar esse cara aqui, quero importar o namespace desta classe específica.
+
+[10:23] Olha, reparem que nós temos duas alternativas, Vocês vão escolher a segunda, Tenho certeza que você não vai cair nesse vacilo e não vai colocar um tópico no fórum por causa disso.
+
+[10:38] Então você vai escolher a segunda opção, Microsoft. Net.Http.Headers, é esse cara aqui.
+
+[10:50] Zoom out, fecha aqui e eu vou parsear esse cara a partir do texto TextCSV.
+
+[11:05] Deixa eu até fazer melhor aqui, TextCsvMEdiaType, ApplicationCsvMediaType.
+
+[11:10] Vou fazer a mesma coisa aqui só que agora eu quero também dar suporte para quando o cliente escrever como MediaTypeApplication/CSV eu também suportar através dessa classe aqui.
+
+[11:13] Então eu vou adicionar mais esses dois caras aqui, SupportedMediaType, vou adicionar outro cara aqui que é app, vou tirar isso do this aqui, então agora eu adicionei esses dois caras.
+
+[11:55] Vamos compilar, será que agora vai funcionar? Vou testar esse cara.
+
+[12:04] Opa, mais um erro, que beleza, ê, Daniel.
+
+[12:09] A lista de SupportedEncoding não pode estar nula, vazia, então adicione pelo menos um encoding que é suportado.
+
+[12:18] Lá naquela classe, na nossa classe, então vamos lá, agora eu vou adicionar aqui um encode aqui, SupportedEcondings.Adds, e vou adicionar o nosso universal, UTF8, Ctrl+Shift+B para compilar, vamos no Postman, vamos testar esse cara e agora o que será que vai acontecer? Ih, rapaz, não é que funcionou? Olha isso, que surpresa para mim.
+
+[12:54] Olha aqui, agora nós temos o recurso livro formatado em CSV, esses caras aqui.
+
+[13:05] Então se você adicionar Text/Csv, ou Application/Csv, deixa eu dar o send aqui, zoom out, send, também vai funcionar.
+
+[13:20] Então agora eu tenho o nosso recurso formatado de outro jeito.
+
+[13:27] Mas eu quero mostrar uma última coisa aqui, uma última operação aqui.
+
+[13:33] Se eu quiser recupera uma lista, dou um send aqui, ele tá me retornando um Json, então essa lista para ler tem dois livros.
+
+[13:43] E se agora que eu vi que eu posso formatar o livro em CSV eu quiser também chamar aqui o Text/Csv e dar um send aqui.
+
+[13:57] Olha o que aconteceu.
+
+[14:00] Eu mandei o cabeçalho Text/CSV e aí o que aconteceu é que nossa aplicação aceitou essa negociação e chamou aquela classe LivroCsvFormatter, só com o problema, gente, deixa eu mostrar pra vocês no código aqui de novo.
+
+[14:15] O problema está nesse código aqui, esse código aqui é um problema de lógica.
+
+[14:24] Aqui a variável está vazia ele livro em CSV e eu só estou escrevendo o formato correto quando o livro é do tipo livro/api.
+
+[14:37] No caso, o objeto é do tipo lista de leitura.
+
+[14:41] Então esse cara vai ficar vazio e ele vai escrever um corpo vazio.
+
+[14:47] O Postman tá retornando um cara vazio aqui. O que eu posso fazer? Posso tentar tratar esse cara mas eu não vou fazer isso, eu quero mostrar um outro método que nós temos dentro dessa classe, dentro da classe abstrata TextOutputFormatters, que é o seguinte, eu só vou formatar para esse livro específico, para esse tipo específico que é livro, tipo específico.
+
+[15:14] Então que eu vou fazer, na verdade, é sobrescrever um método chamado, CanWriteType esse método pede um booleano, ou seja, eu só vou chamar esse método WriteResponse se essa condição que está aqui for aceita.
+
+[15:38] E a condição pra mim será Type=typeof LivroApi.
+
+[15:52] Ctrl+Shift+B, o que que isso vai alterar lá naquele text do Postman?
+
+[15:57] O que vai acontecer, gente, vou dar um send aqui...
+
+[15:58] O que vai acontecer é que mesmo que eu tentar formatar a lista de leitura em CSV o servidor não vai aceitar essa negociação, então ele vai mandar o formato padrão que é JSon.
+
+[16:18] Então a gente tem que estar sempre preocupado com esse tipo de padrão, se ele não conseguir aceitar um determinado MediaType ele retorna algum valor para dizer que aquela lista de leitura existe, tem dois livros e tudo mais, mas ele não aceita esse cara.
+
+[16:32] Então pode ficar até como um desafio para você implementar um formatador específico pra lista de leitura em CSV.
+
+[16:43] Fiquem à vontade aí e qualquer dúvida se vocês quiserem a minha ajuda, meu auxílio e o auxílio dos outros, seus outros colegas aí também é só colocar no fórum.
+
+[16:55] Vamos partir pros exercícios e eu vejo você na próxima aula. Um abraço.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

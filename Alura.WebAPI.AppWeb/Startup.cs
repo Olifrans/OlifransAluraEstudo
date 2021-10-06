@@ -1,6 +1,7 @@
 using Alura.ListaLeitura.Modelos;
 using Alura.ListaLeitura.Persistencia;
 using Alura.ListaLeitura.Seguranca;
+using Alura.WebAPI.AppWeb.Formatters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -54,7 +55,9 @@ namespace Alura.WebAPI.AppWeb
 
             services.AddTransient<IRepository<Livro>, RepositorioBaseEF<Livro>>();
 
-            services.AddMvc().AddXmlSerializerFormatters();
+            services.AddMvc(options => {
+                options.OutputFormatters.Add(new LivroCsvFormatters()); 
+            }).AddXmlSerializerFormatters();
         }
 
 
