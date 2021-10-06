@@ -22,6 +22,17 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
         }
 
 
+        //Get que retorna uma lista de livros, ou seja, uma coleção dos livros cadatrados
+        [HttpGet]
+        public IActionResult ListaDeLivros()
+        {
+            var lista = _repo.All.Select(l => l.ToModel()).ToList();
+            return Ok(lista); //Código de status (200)--> Ok - Retornando uma lista de livros no formato Json
+        }
+
+
+
+        //Get que retorna apenas um livro
         [HttpGet("{id}")] //Consultar um Livro cadastrado
         public IActionResult Recuperar(int id)
         {

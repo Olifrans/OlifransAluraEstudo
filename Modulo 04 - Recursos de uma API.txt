@@ -1,0 +1,129 @@
+Modulo 04 - Recursos de uma API
+
+
+01 - Novos recursos de nossa API
+[0:00] Muito bem, então, gente. Agora a gente já deu alguns nomes, alguns conceitos para vocês aí e nós estamos no caminho de transformar a nossa aplicação, usando o estilo arquitetural REST.
+
+[0:17] Então nós estamos nós estamos querendo fazer a nossa aplicação Restful.
+
+[0:22] Então um dos pilares, um dos primeiros passos para você caminhar em direção a uma aplicação Restful é você transformar a sua API em uma exposição de recursos, e esses recursos têm que ser localizados, tem que ser identificáveis através de URIs. Não é isso?
+
+[0:45] Nós já temos, inclusive, o recurso Livros seguindo essa ideia, temos agora o recurso Livros e essas URIs aí são as URIs que identificam o recurso Livro, tanto a coleção quanto o elemento, e os verbos HTTP definem o que você vai fazer com a requisição. Tudo bem?
+
+[1:12] Só que se você olhar direitinho, a nossa aplicação tem outros recursos também e, por exemplo, tem o recurso Lista de Leitura.
+
+[1:20] Deixa eu abrir aqui a aplicação. Nós temos um recurso que é a Lista de Leitura - Para Ler, Lendo e Lidos -, então a gente também quer, na nossa API, mostrar esse recurso.
+
+[1:36] Então eu vou agora... Antes disso, como é que a gente vai expor esse recurso Lista de Leitura?
+
+[1:46] Deixa eu editar aqui esse slide e mostrar para vocês como é que eu estou pensando.
+
+[1:51] A ideia é essa aqui. Deixa eu mudar logo.
+
+[1:57] Então, o recurso Listas de Leitura, no plural, eu quero expor esse recurso através da URL ListasLeitura.
+
+[2:09] Usando isto aqui, eu pegaria a coleção de Listas de Leituras, três litas de uma vez só, e, usando isso aqui, eu pegaria apenas a Lista de Leitura do tipo específico. Beleza?
+
+[2:27] Então vamos implementar isso no VisualStudio rapidinho?
+
+[2:30] Para isso eu teria que fazer um novo controlador. Vou criar esse cara aqui, vazio, e chamar de ListasLeitura.
+
+[2:41] E o que eu vou fazer? Quando o VisualStudio cria esse controlador para mim, já coloca ele herdando de Controller, que é aquele controlador padrão para uma aplicação MVC.
+
+[2:58] No nosso caso, a gente quer que ele herde de ControllerBase, para usar e restringir código para API. Beleza?
+
+[3:09] Então apaguei aqui tudo. Além disso, a gente viu na documentação que a gente precisa anotar essa classe como APIController e, também, precisamos definir a rota que eu vou usar, o próprio nome do sufixo dessa classe ListasLeitura. Ok?
+
+[3:29] Beleza. Eu falei também que vou expor o recurso para dois métodos GET.
+
+[3:34] O primeiro, eu vou chamar de TodasListas, não recebe nenhum argumento de entrada e vai ter que retornar a coleção de listas. Tranquilo?
+
+[3:52] A coleção são essas três: Para Ler, Lendo e Lidos. Beleza?
+
+[3:57] Nós temos na nossa Class Library aqui, model, um tipo chamado ListaLeitura, que representa uma lista.
+
+[4:10] Tem um tipo e tem uma coleção de livros, então eu vou usar essa classe chamada ListaLeitura para representar cada tipo de lista.
+
+[4:24] Mas eu estou tomando um erro aqui que eu quero mostrar para vocês.
+
+[4:28] Vou botar o zoom para vocês verem aqui o erro.
+
+[4:31] Está dizendo: ListaLeitura é um namespace, mas está sendo usando como um tipo para essa variável paraLer.
+
+[4:39] Na verdade é isso mesmo.
+
+[4:41] Olha só, aqui eu tenho - deixa eu mostrar para vocês -, por exemplo, o namespace dessas classes que estão aqui tem Alura e tem, como segundo elemento, ListaLeitura.
+
+[5:01] Então está rolando agora aqui um conflito entre o nome do namespace e o nome da lista.
+
+[5:08] Para resolver isso, eu vou criar um Alias aqui, vou chamar de Lista, dar um apelido e vou dizer que esse apelido é para o nome ListaLeitura. Ok?
+
+[5:22] Então, em vez de eu chamar de ListaLeitura aqui, eu vou chamar de Lista. Tudo bem, pessoal?
+
+[5:28] Então eu vou ter que ter aqui três caras: Para Ler, Lendo e Lidos.
+
+[5:36] E vou criar essa coleção como uma lista de Lista - lista de lista foi ótimo, não é? -, com essas três instâncias Para Ler, Lendo e Lidos. Ok?
+
+[5:57] Está dando erro, porque ele deve estar reclamando que não foi atribuído ainda, mas tudo bem.
+
+[6:01]E depois eu vou retornar um Ok, um código de status 200, com esses objetos aí.
+
+[6:08] Falta agora a gente popular essa lista aqui.
+
+[6:11] Eu vou usar um método privado aqui para criar esses caras, então private, Lista, CriaLista, e vou receber aqui justamente qual é o tipo da Lista de Leitura.
+
+[6:32] E aqui eu vou dar um return new Lista, beleza?
+
+[6:38] Eu vou popular aqui a propriedade que é converter o tipo ParaString.
+
+[6:47] E os livros serão populados de onde? Do banco de dados.
+
+[6:51] Para isso eu vou precisar de um repositório, gente.
+
+[6:55] Então vamos lá. Aqui nessa classe eu vou guardar esse repositório em um campo readonly, então eu tenho aqui que declarar o repositório de livro.
+
+[7:12] Importei aqui, não é? E vou pedir para o ASP.NET injetar para mim esse repositório de Livro, com o nome repositório, e vou guardar essa referência aqui no meu campo repositório.
+
+[7:29] Ótimo. Então, agora, para popular aqui os meus livros, eu vou pegar todos os livros, só que eu quero apenas os livros cuja lista seja igual àquele tipo ali e vou mandar converter em um enumerável. Tudo bem?
+
+[7:54] Então agora eu posso aqui simplesmente chamar o método CriaLista, passando, como TipoListadeLeitura, cada um dos enumerados específicos: uma é ParaLer - vou copiar esse cara aqui -, outra é Lendo e o outro é Lidos. Beleza, gente?
+
+[8:23] Então agora eu tenho o primeiro recurso ListadeLeitura sendo exposto aqui, e o segundo agora vai ser justamente para expor uma lista específica.
+
+[8:40] Recuperar, pode ser, TipoListaLeitura, tipo.
+
+[8:48] E aqui eu vou criar uma variável tipo Lista, em que eu use o método Lista, passando como argumento o que foi enviado aqui na requisição.
+
+[9:01] Só tem que distinguir agora esta rota da de cima, porque as duas recebem o método GET, e eu tenho que dizer agora que eu vou pegar o segmento tipo e fazer o binding com esse argumento de entrada aqui.
+
+[9:16] Podemos testar agora a aplicação. Ctrl + Shift + B, vou compilar.
+
+[9:21] Tudo funcionou. Agora vou criar aqui um novo teste, beleza?
+
+[9:30] Vou fazer um GET - deixa eu copiar a URL com HTTP - e vou dizer que eu quero pegar todas as listas de leitura com GET.
+
+[9:45] Vou mandar um send, ele vai fazer o send e agora está me retornando todas essas listas de leitura aqui.
+
+[9:51] Para Ler, que tem dois livros.
+
+[9:59] Esse negócio está ficando chato, de ficar tendo que rolar isso tudo aqui.
+
+[10:02] O que é esse monte de texto aqui? Isso aqui é uma imagem.
+
+[10:09] Interessante. A lista Lendo e, lá embaixo, vai ter a lista Lidos.
+
+[10:15] Deixa eu pegar só a lista Lidos aqui e fazer um GET. Agora eu tenho a lista Lidos.
+
+[10:25] Apertei o send? Não, não é isso.
+
+[10:29] Fiz besteira aqui, gente. Deixa eu voltar aqui.
+
+[10:44] ListasLeituras, Lidos.
+
+[10:49] E agora eu finalmente consegui, fiz besteira aqui, para variar.
+
+[10:54] Peguei apenas os livros da lista de leitura Lidos. Então retornei esse novo recurso, beleza?
+
+[11:02] No próximo vídeo a gente vai resolver essa questão da imagem de capa, que já está retornando a imagem como recurso do livro. A gente vai resolver isso.
+
+[11:13] Vejo você no próximo vídeo.

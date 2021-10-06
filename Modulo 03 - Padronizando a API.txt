@@ -1,0 +1,368 @@
+
+
+AULA MODULO 03-->PADRONIZANDO A API
+
+
+01 - Padronizando nossa API
+[0:00] Me diz uma coisa: está tudo certo? Estão gostando do curso? Estão com alguma dúvida? Estão com alguma necessidade de aprofundamento aqui, que a gente detalhe um pouco mais alguma explicação? Coloca lá essa dúvida, essa necessidade, no fórum, e a gente vai poder responder e você vai poder seguir fluido aqui no curso, sem problemas. Tranquilo?
+
+[0:21] Fecha o parêntesis e vamos voltar aqui para o curso.
+
+[0:24] Então, é o seguinte, recapitulando: criamos a nossa API, a nossa pequena API, para fazer um CRUD em livros - temos aqui quatro operações.
+
+[0:32] Eu fiz aqui uma síntese rápida em um slide, e vejam só que slide bonito.
+
+[0:40] Nossa API de livros, para você consultar um livro você faz GET, Livros, Recuperar, passando o ID do livro.
+
+[0:48] Como resposta você vai obter ou o código 200 ou o código 404, caso esse ID identificador não tenha sido encontrado; se for 200, você vai receber um livro no formato JSON. Está beleza?
+
+[1:03] Para você incluir um livro você vai fazer POST, Livros, Incluir, passando o objeto, o novo livro no corpo da requisição.
+
+[1:13] Esse vai receber como código de status na resposta um código 201, dizendo que o objeto foi criado, ou um 400, dizendo que a requisição tem algum problema no corpo da requisição, na própria formatação da requisição. Beleza?
+
+[1:30] E, como retorno, vocês vão ter o próprio livro, o novo livro criado no formato JSON, e mais uma entrada no cabeçalho chamada Location com o endereço para você consultar esse novo livro, já com um novo identificador lá. Tudo bem?
+
+[1:48] Para alterar você faz um POST, Livros/Alterar, com o objeto JSON no corpo, vai receber como resposta 200, Ok, ou 400, bad request, e, como retorno, nada.
+
+[2:01] Para excluir esse livro, vocês vão ter POST/Livros/Remover, passando o identificador do livro, beleza?
+
+[2:10] Como código de retorno, 203, ou seja, "ok, e agora não tem mais nenhum conteúdo", ou 404, dizendo que o identificador não foi encontrado, e, como retorno, nada. Beleza?
+
+[2:25] Então, com essas informações, um desenvolvedor de uma aplicação de terceiro pode agora consumir e fazer essas operações de CRUD no livro. Beleza?
+
+[2:35] Só que fica agora a questão: como que o desenvolvedor, como que esse cara - coloque-se no lugar dele e se pergunta - sabe que para consultar um livro ele vai ter que usar o nome Recuperar?
+
+[2:50] Como que ele sabe que para adicionar um livro ele vai usar o Incluir, para editar um livro ele vai usar Alterar, ou para excluir um livro ele vai usar o Remover?
+
+[3:03] Percebam que eu usei verbos diferentes, porque realmente é ambíguo. Eu não sei, na cabeça da pessoa que criou o API, qual a operação que ele utilizou, então eu novamente vou precisar de um manual.
+
+[3:18] Vou precisar de algum tipo de documentação para dizer: "para você consultar, você precisa usar o verbo 'recuperar' e tudo mais".
+
+[3:28] Então isso novamente vai de encontro ao que a gente tinha falado nas aulas anteriores.
+
+[3:33] Eu não quero ficar mantendo uma documentação, beleza?
+
+[3:37] Então qual é a saída, como é que eu faço para sair desse problema aqui? Estou melhorando, mas ainda tenho que usar alguma coisa.
+
+[3:46] A resposta já está disponível, a gente não vai precisar fazer muita mudança, não.
+
+[3:52] Vai ter mudança, mas a resposta já está disponível.
+
+[3:55] Vamos olhar o Postman, que a resposta vai estar lá no Postman. Olha só.
+
+[4:00] Vou mudar aqui para o Postman, e aqui eu tenho as abinhas, cada um com um teste para aquelas requisições que a gente fez da API.
+
+[4:11] Para recuperar um livro, eu passo a URL, posso escrever alguma coisa aqui no cabeçalho, mas o mais importante nesse momento é que eu determino qual é o método que eu usei na requisição. Eu usei o método GET, não é isso?
+
+[4:30] Para incluir um livro, usei o método POST, não é isso?
+
+[4:34] Mas reparem que aqui tem uma setinha no Postman que, quando eu clico aqui, ele me dá uma lista de opções.
+
+[4:44] Então, olha só, não tem só GET e POST, existem uma série de outras opções. Estas opções estão disponíveis, foram determinadas, definidas na especificação HTTP, cada uma tem uma finalidade.
+
+[5:01] Então a resposta está justamente no verbo, no método da requisição.
+
+[5:08] Então você vai dizer qual é a operação que você vai querer fazer na requisição através do método.
+
+[5:16] Então, por convenção, a gente usa os seguintes métodos: GET para você consultar o livro - tudo bem, GET já está legal; para você incluir um livro a gente também continua usando a convenção do método POST; para alterar um livro, eu já não vou mais usar o POST, eu vou usar o verbo PUT; para remover um livro eu vou usar o verbo - olha só o que tem aqui - DELETE.
+
+[5:52] Então, já tem alguma associação entre o método na requisição e o que você quer fazer com aquela requisição.
+
+[6:03] Consultar, GET; incluir, POST; alterar, PUT; deletar, DELETE.
+
+[6:10] Então, gente, o que eu quero fazer é aumentar ainda mais a padronização da minha API, então deixa eu modificar aqui o meu slide para dizer o seguinte: agora o que eu quero fazer é que para consultar um livro eu vou usar o GET Livros, passando o ID; para incluir um livro eu não preciso mais dizer qual é o verbo, o verbo está no próprio método da requisição POST; para alterar, também não vou colocar nada, vou dizer que quero fazer um PUT; para remover, também, "tchau remover", e entra aqui o método DELETE. Beleza?
+
+[6:59] Então, com isso, um desenvolvedor de uma aplicação de terceiros, que já está acostumado a consumir APIs, ele já tem um padrão de uso, o padrão HTTP, então quando ele vai tentar consumir a nossa API, a nossa API, se também estiver nesse padrão, ela vai ser mais fácil de ser consumida.
+
+[7:20] E melhor: a gente não vai ter que ficar mantendo uma documentação extensa para isso.
+
+[7:27] Agora, no próximo vídeo, a gente vai fazer a alteração da nossa API para se conformar a esse padrão aqui, que vai usar uma combinação dos métodos ou verbos HTTP com a nossa rota, beleza?
+
+[7:44] Só que tem um problema aí, e o problema é justamente que com essa nova padronização, a gente agora não tem mais o roteamento padrão do MVC, que usava, como primeiro segmento, o controlador; segundo segmento, a action; terceiro segmento, opcional, o ID.
+
+[08:03] Agora, neste momento, o que nós temos é: primeiro segmento, controlador, mas o segundo segmento não é uma action, então a gente vai ter que ver o que a gente vai fazer na nossa implementação, beleza?
+
+[8:17] Te vejo lá. Espero que você esteja curioso, e te vejo lá no próximo vídeo.
+
+
+
+02 - Vantagens de padronização
+Vimos no vídeo anterior que existem algumas vantagens de padronizarmos a nossa API. Qual das opções abaixo é uma das vantagens apresentadas?
+Resp: Um desenvolvedor que já esta acostumado a consumir API's consegirá trabalhar mais facilmente com a nossa API
+
+
+
+03 - Configurando o padrão de rotas de API
+[0:00] Então, gente, estamos com a seguinte tarefa: transformar aquelas rotas que nós temos, convencionais do padrão MVC, com o segundo segmento com o nome da action, nessas rotas cujo padrão é o padrão de uma API, em que as operações são determinadas pelos métodos da HTTP, e nós não temos mais um segmento de action, a action não fica determinada aqui. Beleza?
+
+[0:31] Então é essa a nossa tarefa. Vou voltar aqui para o Visual Studio.
+
+[0:35] Então é o seguinte: nós temos, aqui nessa aplicação, vários outros controladores - na verdade a gente tem quatro, sendo que três são convencionais do MVC, eles servem HTML. Beleza?
+
+[0:48] Apenas esse cara aqui é o cara que a gente quer servir à API, então esse aqui vai ser a exceção à regra da aplicação.
+
+[0:58] Então eu vou procurar uma solução que esteja no controlador, beleza?
+
+[1:02] E, gente, existe uma documentação da Microsoft bastante interessante para explicar API - e eu vou colocar o link para vocês na transcrição -, mas a primeira coisa que ele fala aqui, para quando você quiser construir um WebAPI com ASP.NET Core, é derivar a sua classe de controlador de um outro controlador, um controlador chamado ControllerBase.
+
+[1:26] Então vamos fazer isso lá no VisualStudio? Eu vou colocar aqui, em vez de Controller, ControllerBase.
+
+[1:32] O que esse cara faz? O que esse cara tem de diferente?
+
+[1:35] Olha só, se eu botar o mouse aqui em cima, ele vai me indicar - deixa eu aumentar aqui o zoom - classe base para um controlador MVC sem suporte a view. É o que nós queremos, é exatamente isso que a gente quer. Tranquilo?
+
+[1:53] A gente não quer suporte a view, não quer nem ter essa opção. Deixa eu minimizar esse cara.
+
+[1:58] Tanto que, agora, esse método que retorna, que transforma o objeto em um JSON, não existe na classe ControllerBase, assim como também um método chamado View, aquele método view, que a gente usa lá nos nossos controladores que entregam HTML, também não existe nesse método.
+
+[2:16] É bom para a gente, porque restringe as nossas opções para o caso de uma API.
+
+[2:22] Então, se eu não posso usar o JSON aqui, eu posso usar o quê? Eu vou usar o método Ok.
+
+[2:29] O método Ok retorna um código 200, ok, e retorna também um objeto que está sendo passado no argumento desse método como JSON. É isso que a gente está fazendo, beleza?
+
+[2:42] Então a primeira coisa foi esta aqui.
+
+[2:46] Lá na documentação - não vou ler aquilo tudo para vocês -, uma das coisas que também é falada lá é que todo o controlador que seja um controlador para servir a uma API deveria ter também, apenas para identificar melhor, o atributo APIController. Ok?
+
+[3:06] Esse atributo aqui, dizendo e identificando que esse cara é um controlador para servir à API.
+
+[3:13] Tranquilo? O que está faltando mais agora aqui?
+
+[3:17] Vou dar um Ctrl + F5 para vocês verem o que vai acontecer.
+
+[3:21] Ctrl + F5 vai compilar a aplicação, vai rodar a aplicação, só que a gente vai tomar um erro aqui, e eu quero ler esse erro e mostrar para vocês o que está faltando.
+
+[3:33] InvalidOperation, a action LivrosControllerRecuperar não tem uma rota de atributo, um atributo para indicar a rota, atributo aqui no sentido de anotação, de você colocar uma anotação na action Recuperar.
+
+[3:55] E aí tem aqui uma outra regra muito forte: Action métodos em controles que são anotados com o APIControllerAttribute tem que ser roteados via RouteAttribute.
+
+[4:10] Então, a gente não fez isso.
+
+[4:13] O que significa usar RouteAttribute? RouteAttribute é você colocar um atributo aqui chamado Route, então quando você bota o APIController, você é obrigado a definir esse roteamento aqui.
+
+[4:30] É o que nós queremos, nós queremos mudar o roteamento padrão, sair do convencional MVC para um novo roteamento.
+
+[4:38] E esse roteamento, gente, eu estou colocando na classe LivrosController, porque eu vou fazer esse roteamento para todo mundo que está embaixo, para todas as actions que estão nesse controlador aqui.
+
+[4:51] Esse roteamento eu vou determinar como sendo o nome do controlador, beleza?
+
+[5:00] O nome do controlador dentro de colchete, eu indico que é o roteamento que vai pegar o nome do controlador e vai servir como primeiro segmento do roteamento.
+
+[5:13] Qual é o segundo segmento? O segundo segmento agora não é - já que agora é um APIController - mais o segmento action. Ok? Beleza?
+
+[5:27] Vamos testar isso para a gente ver o que vai acontecer?
+
+[5:30] Então agora deixa eu compilar a aplicação, Ctrl + F5.
+
+[5:37] Agora não deu mais aquele erro, então o nosso controlador já tem o RouteAttribute.
+
+[5:41] Agora eu vou no Postman e vou testar a recuperação de um livro usando GET Livros/Recuperar/1008.
+
+[5:48] Vamos ver o que vai acontecer, vou apertar o botão send aqui.
+
+[5:55] Apertei o send já? E aí deu um 404 NotFound.
+
+[6:02] Esse 1008 não existe mais? 1008 existe.
+
+[6:10] Por que ele está dando NotFound lá?
+
+[6:12] Na verdade está dando NotFound justamente nessa rota aqui, então essa rota não está sendo mais tratada pelo MVC, pelo ASP.NET.
+
+[6:28] Então a gente agora tem que descobrir que rota que ele vai tratar.
+
+[6:32] Será que se eu botar Livros/1008 ele já vai tratar essa rota? Apertei aqui: 404, também não reconheceu.
+
+[6:40] Então o que está faltando para a gente poder acertar essa rota? O que está faltando é justamente eu dizer o segundo segmento.
+
+[6:50] Qual é o segundo segmento para essa action específica aqui? O segundo segmento é o ID. Beleza?
+
+[7:02] Então vou compilar, Ctrl + Shift + B, e vou lá no Postman para testar novamente essa rota. Vamos ver o que vai acontecer.
+
+[7:14] E agora eu tenho um 200, Ok, então ele atendeu, e o livro está aqui em formato JSON. Beleza?
+
+[7:24] Então, gente, eu já consegui mudar a primeira rota, que é a rota de recuperação, de consulta de um livro. Agora estou atendendo a API através da rota Livros e o ID. Ok? Beleza?
+
+[7:41] Agora o que a gente precisa fazer para poder mexer nesses caras aqui?
+
+[7:44] Deixa eu salvar esse cara aqui, incluir livros e tentar dar um send aqui.
+
+[7:49] Já tem um body, beleza. Se eu der um send aqui ele vai dar um 404, porque nós não estamos mais atendendo via Action Method, como segundo segmento.
+
+[7:59] Então o que a gente precisa fazer? Então agora eu quero fazer um Livros, POST Livros, e quero que esse cara vá bater lá no meu incluir, lá no meu POST.
+
+[8:11] O que será que vai acontecer? Se eu der aqui um send, ele está dando um erro 500.
+
+[8:18] Esse erro 500 ele retorna aqui um HTML com mais informações desse erro.
+
+[8:27] Vamos ver o que está acontecendo? Aqui ele está dizendo o seguinte: não foi tratada exceção porque tentou uma AmbiguousActionException. Existem múltiplas actions para tratar esta mesma rota POST Livros.
+
+[8:46] Vamos ver? De fato, gente, agora tenho Post Incluir, POST Alterar, POST Remover.
+
+[8:58] Então, na verdade o que a gente precisa fazer é mudar e dizer que apenas essa action aqui atende via POST.
+
+[9:05] Essa aqui, de alteração, ela atende via PUT; e essa aqui atende via DELETE, sendo que nesse DELETE nós temos também que colocar a mesma coisa lá do Recuperar, dizendo que ainda existe mais um segmento nessa rota, que é o identificador.
+
+[9:35] Vamos testar para ver se vai tudo funcionar? Vou dar um Ctrl + Shift + B e agora vou testar o Postman com esse novo roteamento.
+
+[9:45] Então estou fazendo aqui POST em Livros, com esse novo livro aqui e, se isso tudo der certo, tem que dar um 201, created.
+
+[9:58] Vou dar um send. Ok, 201 Created.
+
+[10:05] Então agora nós estamos atendendo a este roteamento aqui POST Livros, inclusão de um livro. Beleza?
+
+[10:14] Alteração: PUT Livros. Só preciso colocar isso, não preciso mais colocar o Alterar.
+
+[10:21] Eu quero alterar... Deixa eu pegar esse cara aqui, vou copiar, vou colar aqui no meu e vou dizer que é o Beltrano de Tal.
+
+[10:39] A lista vai ser a lista dois. Vamos ver lá na aplicação se está tudo funcionando.
+
+[10:44] Vou dar um PUT aqui, e espero que dê um 200.
+
+[10:46] Deu um 200, mas eu sou muito cético. Vamos ver aqui.
+
+[10:52] Temos agora aqui um livro na lista de Lidos. Testando o título editado, Beltrano de Tal. Olha que beleza, funcionou.
+
+[11:00] Agora eu vou excluir esse livro 2011, salvo esse teste, vou dar um Delete Livros, remover 2011.
+
+[11:13] Send, NoContent. Então agora esse livro também foi excluído.
+
+[11:19] Vamos dar um refresh, e não está mais lá.
+
+[11:22] Então, gente, agora a gente mudou o roteamento, saiu do roteamento convencional MVC com três segmentos - controller, action e ID opcional -, para um roteamento específico para APIs, em que primeiro a gente herdou o nosso controlador de ControllerBase, depois colocou o atributo APIController, que nos obrigou a usar um roteamento por atributo, usando RouteAttribute.
+
+[11:49] Depois que a gente fez isso, a gente fez só os ajustes nos métodos específicos, para responder apenas àqueles métodos específicos, testou tudo via Postman e agora a nossa API está cada vez mais padronizada. Beleza?
+
+[12:03] Te espero no próximo vídeo para a gente conversar um pouco e dar alguns nomes aos bois. Beleza?
+
+[12:10] Abraço.
+
+
+
+04 - Controlador AspNet para APIs
+De acordo com a documentação da Microsoft, de qual classe nosso controlador deve derivar para seguir as especificações de uma API com ASP.NET?
+Resp: ControllerBase Alternativa Correta! De acordo com a Microsoft, esta classe deve ser utilizada quando quisermos construir uma API.
+
+
+
+05 - O ESTILO ARQUITETURAL REST
+[0:00] Então nesse vídeo a gente vai tentar agora falar de alguns conceitos que a gente já vem usando, nessa modificação que a gente está fazendo na nossa aplicação para criar uma API que vai permitir a integração de outras aplicações com a nossa.
+
+[0:16] Então a gente não chegou no final ainda do curso, mas agora a gente já tem condição de dar alguns nomes para ir ajudando vocês na conceituação.
+
+[0:30] Então o que nós estamos fazendo? Deixa eu abrir aqui o slide. A gente está basicamente usando o HTTP como base para desenvolver uma API Web, beleza?
+
+[0:41] O que significa isso? Significa que nós estamos usando tudo o que a gente pode de uma especificação HTTP.
+
+[0:51] Então, por exemplo, na requisição nós estamos usando agora os métodos HTTP para dizer que operações a gente quer executar na aplicação, a aplicação que serve àquela API.
+
+[1:05] Então métodos como GET, POST, PUT, DELETE, e a gente já viu que existem alguns outros métodos também que a gente pode se usar e se valer disso.
+
+[1:18] Primeiro, usando o método HTTP para informar uma operação, diferente de uma aplicação tradicional, que usava na rota a action. Então estamos fazendo isso.
+
+[1:31] Segunda coisa, a rota em si ela indica agora um recurso na Web, beleza?
+
+[1:41] Então agora nós estamos definitivamente usando a especificação HTTP, em que ela informa que um recurso na web está identificado, está localizado por uma URI (Uniform Resource Identifier), ou seja, aquele endereço URI identifica unicamente, uniformemente, um recurso. Beleza?
+
+[2:08] Então se você quer um livro, você quer um produto, você quer uma nota fiscal, são recursos na Web e você identifica esses caras através de uma URI. Beleza?
+
+[2:23] Então nossa requisição agora está informando exatamente essa ideia dos recursos.
+
+[2:29] E os recursos podem ser um livro especificamente, ou seja, um único elemento, mas também pode ser uma coleção de recursos.
+
+[2:40] Por exemplo, se eu usar uma URI apenas com uma rota Livros, eu posso querer retornar todos os livros que existem na minha aplicação.
+
+[2:52] Então eu vou fazer isso, vou mostrar para vocês a implementação agora de uma URI que retorna uma coleção. Beleza?
+
+[3:00] Vamos lá no VisualStudio. Então a gente vê aqui que nós temos aqui quatro operações - GET, POST, PUT e DELETE -, o CRUD, mas eu vou fazer aqui também um GET que vai retornar não mais um elemento especificamente, mas a lista da livros.
+
+[3:35] Então, quando eu fizer um GET eu quero retornar uma lista de livros.
+
+[3:40] Então vou fazer aqui Return, Ok, Lista. Beleza?
+
+[3:46] E eu vou montar essa lista a partir do meu repositório, usando a propriedade que pega todos os livros, só que eu quero selecionar, e para cada livro eu quero converter esse livro no modelo, e depois converter para uma lista especificamente. Tudo bem?
+
+[4:07] Porque estou sempre retornando aqui um modelo do tipo LivroUpload e eu quero fazer a mesma coisa aqui.
+
+[4:13] Então agora o que eu tenho aqui é uma lista de LivroUpload, e vou retornar isso aqui na minha API. Beleza?
+
+[4:32] Então agora eu estou aumentando um pouquinho mais a minha aplicação, a minha API, e agora posso retornar também uma lista de livros, beleza?
+
+[4:42] Compilou, eu vou testar isso aqui no Postman rapidinho.
+
+[4:51] GET Livros, sem nenhum identificador, eu quero que venha a lista.
+
+[4:57] Vou apertar o send aqui e vamos ver o que vai acontecer. Vai demorar um pouquinho.
+
+[5:02] Retornou 200, retornou ok, e agora retornou todos os livros que eu tenho na minha aplicação.
+
+[5:10] A notação JavaScript para uma lista, um array, é com o colchete ali.
+
+[5:17] Então eu tenho um, dois, três, quatro livros na minha aplicação.
+
+[5:21] Se eu rodar aqui novamente a minha aplicação, eu vou ter aqui os quatro livros também.
+
+[5:27] Então agora eu consigo obter a coleção, eu também consigo obter a coleção de elementos.
+
+[5:33] Isso também é muito comum nas WebAPIs, você pode pegar todas as coleções, guardar em cache, poder fazer o que você quiser com isso, como desenvolvedor de uma aplicação de terceiros, ou pode obter apenas o identificador único lá, um elemento específico daquela coleção, ou seja, um livro unicamente.
+
+[5:55] Então, voltando aqui para o nosso slide, a gente está usando HTTP agora como base, nosso API identifica, indica recursos.
+
+[6:04] A gente vai ver, na próxima aula, que a gente tem outros recursos também, e a gente vai ter que agora expor, fazer a nossa API expor esses outros recursos também, mas agora nós estamos usando operações com métodos GET e a URI identificando aquele recurso ali sem nenhuma informação de operação na URI, como tinha Recuperar, Incluir e tudo mais.
+
+[6:31] O que mais? E as respostas? As respostas também nós estamos usando, tentando usar ao máximo o HTTP, então códigos de status informando o resultado - 200, 201, created, 203, NoContent, 400, 404 -, tudo isto para indicar o resultado daquela operação e fazer com que a aplicação tenha um padrão de comportamento. Beleza?
+
+[7:00] E têm alguns cabeçalhos, a gente pode colocar alguns dados adicionais no cabeçalho, como por exemplo, quando a gente criou um recurso, a gente passou a URI no cabeçalho daquele cabeçalho Location, e o corpo retorna a informação em formato específico.
+
+[7:20] Por enquanto estamos retornando JSON, mas depois a gente vai ver também que a gente pode retornar XML e outros formatos customizados. Tudo bem? Tranquilo?
+
+[7:31] Então, quando a nossa aplicação começa a usar o HTTP como base, essa aplicação começa a ser entendida como uma web que informa, que disponibiliza, que expõe recursos e esses recursos também, na informação desses recursos, nós também temos como descobrir o que fazer para navegar de um recurso para outro, fazendo com que a aplicação ela mude de um estado para outro.
+
+[8:06] Quando você desenvolve a sua API desta maneira, você está aderindo a um estilo arquitetural chamado REST, é uma maneira de você montar uma arquitetura baseada no HTTP, na especificação HTTP, chamado REST.
+
+[8:27] O que significa REST? REST significa Representational State Transfer.
+
+[8:34] Você transforma a sua aplicação numa máquina de estados, em que cada requisição faz com que a sua aplicação mude de um estado para outro, e esse estado é transferido, a representação desse estado é transferido para você como resposta da sua requisição.
+
+[8:56] Aqui tem um texto que vou deixar, não vou ler o que está escrito aqui , mas é um texto que o criador desse estilo arquitetural escreveu, um cara chamado Roy Fielding, um cara que participou da especificação do HTTP e ele depois criou uma dissertação de doutorado e lançou esse estilo arquitetural REST.
+
+[9:18] Ele descreve uma aplicação que adere a esse estilo REST, que é uma coisa que nós já estamos nos aproximando.
+
+[9:26] Aí, na comunidade, as pessoas falam que a aplicação que adere a esse estilo é chamada de Restful, uma aplicação que está totalmente aderente, full, cheia.
+
+[9:43] E agora eu vou deixar para vocês esta pergunta, e quero que vocês pesquisem aí na internet: com o que nós temos hoje de implementação, será que nós já somos uma aplicação Restful? A nossa aplicação é uma aplicação Restful?
+
+[9:58] Então vou deixar essa pergunta para vocês.
+
+[10:00] Reflita, pesquise na internet. Na próxima aula a gente começa a discutir um pouco isso.
+
+
+
+06 - Arquitetura REST
+Qual das opções abaixo define corretamente a arquitetura REST?
+Resp: REpresentational State Transfer. A aplicação é uma máquina de estados onde cada requisição faz que a aplicação mude de um estado para outro.
+
+
+
+
+07 - Para saber mais: Endpoints
+Outro conceito que você vai encontrar na literatura de APIs web, e mais genericamente na de serviços web, é o termo Endpoint.
+Um endpoint representa um ponto de contato entre a aplicação cliente e a aplicação que está disponibilizando o serviço. Esse ponto de contato está diretamente relacionado com a URI atendida e também com o recurso.
+Contudo, um recurso pode ser atendido por vários endpoints. Por exemplo, o mesmo recurso carro pode ser atendido por dois endpoints:
+Carros/{id}
+Clientes/{id}/carros/{id}
+Em nossa aplicação temos por enquanto apenas um endpoint: Livros.
+
+
+
+08 - Consolidando o seu conhecimento
+Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com a próxima aula.
+
+
+9 - O que aprendemos?
+Neste capítulo, aprendemos:
+O motivo de padronizar nossos meios de acesso.
+A classe ControllerBase e seu comportamento.
+Arquitetura REST
+
+
