@@ -127,3 +127,255 @@ Modulo 04 - Recursos de uma API
 [11:02] No próximo vídeo a gente vai resolver essa questão da imagem de capa, que já está retornando a imagem como recurso do livro. A gente vai resolver isso.
 
 [11:13] Vejo você no próximo vídeo.
+
+
+
+
+
+02 - Fabiana e o recurso Carro
+Fabiana está criando uma Api para expor serviços de consulta a carros usados comercializados em uma loja. As rotas que irão disponibilizar o recurso CarroApi estão listadas abaixo:
+
+GET CarrosApi
+GET CarrosApi/{id}
+Como deve ser o código do controlador para representar as rotas acima projetadas por ela? Marque a única alternativa correta.
+Selecione uma alternativa
+
+[ApiController]
+[Route("[controller]")]
+public class CarrosApiController: ControllerBase
+{
+  [HttpGet]
+  public IActionResult Todos()
+  {
+    return .... //resto do código aqui
+  }
+
+  [HttpGet("{id}")]
+  public IActionResult GetCarro(int id)
+  {
+    return .... //resto do código aqui
+  }
+}
+
+
+
+03 - Novo tipo para o recurso Livro
+[0:00] Fala pessoal, tudo bem? Nós estamos no processo de criar novos recursos para a nossa API e um desses recursos é a lista de leitura.
+
+[0:07] E aí uma das coisas que a gente viu que não ficou muito boa, que quando eu mando a coleção de Livros como parte dessa lista de leitura, eu estou enviando a imagem com parte dessa resposta. Isso está fazendo com que o tamanho fique grande e não tenha nenhuma utilidade essa imagem aqui, uma vez que eu estou mandando isso dentro do Json.
+
+[0:29] Então, o que eu vou fazer é mudar, ao invés de mandar essa imagem eu vou mandar apenas a URI desse recurso. A imagem também é um recurso, eu vou mandar a URI desse recurso. Tudo bem?
+
+[0:42] Então, olha só, o que está acontecendo é que a minha rota aqui que manda uma lista, ela manda um tipo lista leitura, esse tipo lista leitura possui uma coleção de livros e esse tipo livro, possui como propriedade um byte array para essa imagem. E eu não quero isso, eu quero mandar apenas uma URI, uma String com esse novo endereço.
+
+[1:15] Então, para isso, eu vou criar um novo tipo que representa esse recurso na API, que representa o recurso Livro na API. Então eu vou criar aqui um tipo aqui chamado Livro API. E esse Livro API terá as mesmas propriedades do Livro, só que alguns tipos diferentes. A imagem da capa será do tipo String.
+
+[1:51] Para fazer isso, para eu conseguir converter de um Livro para Livro API e vice-versa eu vou usar a mesma estratégia que eu usei no tipo Livro upload. Livro upload é usado para eu fazer o upload da imagem de capa, por isso que a propriedade é do tipo IFormFile, implementação interface. E para fazer a conversão de um livro para um Livro API eu tenho aqui uma classe que faz essa conversão entre um e outro.
+
+[2:29] Então, olha só, eu vou criar aqui um método de extensão, tem que ser do tipo estático, tem que ser público que vai mandar para criar um Livro API e vou chamar esse cara aqui de ToApi e esse método de extensão vai ser em cima do Livro. Beleza?
+
+[2:51] Já tenho o código quase todo pronto aqui, vou retornar um novo Livro API e esses caras aqui serão os Livros. ID vai ser o mesmo, o título, subtítulo, resumo, autor também, a imagem da capa que vai ser um pouquinho diferente. A imagem de capa vai ser uma String. E essa string, vou determinar aqui agora, é uma String que representa o recurso dessa imagem. Eu vou chamar Livros barra, eu vou interpolar aqui e vou usar o identificador e capa. Essa vai ser a URI para a imagem de capa do Livro. Livro barra ID, barra capa.
+
+[3:56] Acabei de criar, acabei de expor um novo recurso na minha API, a capa do Livro. Depois a gente conversa com calma disso aí.
+
+[4:04] E agora, vou fazer uma modificação que a minha lista de leitura, ela não vai mais retornar um Livro API, um Livro, mais vai retornar um Livro API. O que acontece agora é que isso vai gerar uma série de erros aqui, vamos ver, nem muito. Eu tenho no meu link, nesse link aqui, eu preciso fazer uma projeção, fazer um Select aqui onde, do Livro, eu vou gerar um Livro API. Tudo bem gente?
+
+[4:44] Vamos ver o que vai acontecer, eu vou compilar a minha aplicação, vamos ver se está faltando algum problema, algum lugar vai dar erro, vamos ver, não, não teve erro. Agora vou testar novamente o Postman esse mesmo cara aqui leitura lidos, vamos ver o que vai acontecer, olha o tamanho da minha resposta, antes saiu noventa e sete k, agora é um k. Por quê? Porque a imagem de capa agora ficou muito, muito pequena, ficou com a URI para essa imagem capa.
+
+[5:19] Problema é que eu ainda não tratei, se eu tentar usar esse cara aqui, tentar fazer Livros, quatro, capa eu vou ter o quatrocentos e quatro porque eu ainda não estou tratando essa rota, não é isso?
+
+[5:40] Então, vamos fazer rapidinho esse cara aqui para a gente finalizar agora nossos recursos e passar para outros problemas... espera aí, deixa eu fechar tudo aqui, fechar todos os documentos, no meu controlador Livros Controller, eu vou criar uma nova rota aqui, vou até usar esse perto aqui porque ele é muito parecido e essa rota, ela é assim, ela tem como segundo seguimento o ID e terceiro seguimento, a capa. Vai retornar um IAction Result, vou chamar de Imagem Capa, recebendo o identificador do Livro como argumento de entrada e esse método já está implementado lá no controlador de Livro.
+
+[6:28] Aqui eu tenho Imagem Capa, então o que eu vou fazer é copiar esse método aqui e colá-lo aqui, tranquilo gente? Ctrl+Shift+B, uma coisa que estava sendo exposta lá na Web tradicional, aplicativo Web tradicional, agora estou expondo aqui também.
+
+[6:51] No Postman agora estava dando quatrocentos e quatro e agora vamos ver o que vai acontecer, agora eu tenho esse recurso sendo exposto também, a imagem da capa do Livro, identificado pelo ID quatro. Tudo bem gente?
+
+[7:10] Então, duas coisas que nós fizemos, nós melhoramos, nós otimizamos o retorno do recurso lista leitura e também criamos, agora, um novo recurso que é a capa desse Livro.
+
+
+
+04 - Filmes e seus atores
+Veja o JSON retornado por uma Api de cinema e que representa um recurso Filme associado a uma coleção do recurso Ator:
+{
+    "id": 43,
+    "nome": "Vingadores Guerra Infinita",
+    "anoLcto": 2018,
+    "atores": "Samuel Jackson, Scarlett Johansson, 
+Robert Downey Jr, Chris Evans, 
+Chris Hemmsworth"
+}COPIAR CÓDIGO
+Contudo, essa opção não fornece possibilidade de obter maiores informações sobre o recurso Ator.
+Das opções JSON abaixo, escolha a que melhor se adequa aos padrões REST de representação dos recursos em uma Api.
+Selecione uma alternativa
+{
+  "id": 43,
+  "nome": "Vingadores Guerra Infinita",
+  "anoLcto": 2018,
+  "atores": [
+    "Ator/2",
+    "Ator/12",
+    "Ator/63",
+    "Ator/9",
+    "Ator/10"
+  ]
+}
+
+
+
+
+
+
+05 - Tudo é recurso
+[0:00] Então, minha gente, nessa aula a gente fechou o primeiro pilar de uma API que quer seguir o padrão arquitetural REST.
+
+[0:08] Tudo que essa API está expondo é através de recursos.
+
+[0:13] Então tudo é recurso. E a gente já tinha o recurso livros e nessa aula a gente agora expôs o recurso Lista de Leitura, onde você pode ter um conjunto de livros que estão naquela lista de leitura. Ok?
+
+[0:27] Além disso nós fizemos isso aqui e além disso a gente também expôs esse recurso aqui, que na literatura, nos livros, artigos sobre a API, sobre Web APIs, isso vai ser identificado como um sub recurso, um recurso que depende do recurso principal.
+
+[0:50] Nesse caso aqui é a capa de um livro, do recurso principal, livro. Beleza?
+
+[0:55] E fazendo isso a gente otimizou o tamanho da resposta de um recurso de leitura. Beleza?
+
+[1:07] Pra fechar a gente precisa fazer alguns ajustes para tornar a nossa API um pouco mais padronizada para desenvolvedores terceiros.
+
+[1:17] A primeira coisa que eu quero mostrar para vocês é um ajuste simples mas que vai ajudar a gente a separar o que é API do que é o que é a aplicação de fato.
+
+[1:34] Ou seja, rotas que são da API e rotas que integram o HTML, que fazem parte da interface do usuário, aquela aplicação que mostra o HTML, o layout e tudo mais.
+
+[1:46] Então, esse ajuste a gente vai fazer colocando no primeiro segmento aqui chamado API.
+
+[1:55] Então nós vamos pegar todas as rotas e vamos colocar esse primeiro segmento aqui, então agora nós vamos expor esses recursos através dessas rotas aqui.
+
+[2:09] E aí o que for de API vai estar separado pelo seguimento API, o que for de HTML, da aplicação web propriamente dita, a gente não vai ter esse API.
+
+[2:23] Então vamos lá no Visual Studio e eu vou mostrar que essa modificação é muito simples, vou abrir esses dois controles aqui que são os controles da API e eu vou colocar aqui na minha rota API na frente.
+
+[2:36] Só isso, não tem nenhuma diferença. Vou rodar a aplicação e vou mostrar pra vocês agora essa diferença. Vou fazer aqui o login, admin123, lembre-se da senha e do login de vocês quando vocês criaram o usuário.
+
+[2:56] Então se eu fizer aqui um zoom no endereço, vocês vão perceber que esse endereço não tem API, então ele tá entregando HTML, se eu apertar aqui esse livro, eu vou ter a rota que vai mostrar um HTML com os detalhes daquele livro.
+
+[3:13] Agora se eu quiser obter a API, só a informação sobre o livro, 1008, eu vou escrever, (api/Livros), que agora nós estamos falando do recurso de livros cujo identificador é 1008, e aí eu vou bater aqui o retorno em JSON.
+
+[3:39] Vou mostrar isso tudo de novo lá no Postman porque eu tenho que fazer agora modificação, eu tenho aqui todas aquelas requisições que eu estava fazendo para analisar as respostas e mandar as requisições tudo isso agora precisa ser novamente testado...
+
+[4:02] Eu estou mandando agora um SEND com API na frente retornando aqui o JSON, vou salvar esse cara, pra eu incluir um livro também eu tenho que botar API na frente. Eu não vou testar eu vou apenas salvar, não vou mandar nada.
+
+[4:17] Aqui também eu vou botar API na frente, também vou salvar, eu quero testar esse alterar aqui.
+
+[3:23] E a remoção... Agora também tem um API na frente.
+
+[4:29] O que mais? A recuperação de uma lista, API também na frente.
+
+[4:33] A gente não tinha testado ainda a API, vamos salvar aqui.
+
+[4:37] Como isso aqui é um GET, eu vou testar.
+
+[4:39] E aqui eu estou retornando... Os livros da lista lidos.
+
+[4:45] Eu quero mostrar para vocês, gente, o próximo ajuste que vai fazer, repare o seguinte, quando eu pego um livro, eu estou pegando o livro, identificador, título, o subtítulo, autor, resumo, a capa null.
+
+[5:00] Esse livro se você achar que o Visual Studio... Vocês já viram que ele tem uma capa, não é isso? Tem uma capa.
+
+[5:11] Por que não está sendo mostrado lá?
+
+[5:16] Esse livro está para ler, não é isso? Eu vou pegar aqui a lista para ler e tá lá, olha só.
+
+[5:26] Só que olha a capa, tá sendo enviado aqui.
+
+[5:29] Então, gente, nós estamos com uma inconsistência e estou mostrando o livro de uma maneira e em outro lugar, em outra página API, endpoint, que a gente chama, outra operação, a gente tá mostrando o livro de outra maneira.
+
+[5:47] Então esse é um ajuste que eu tenho que fazer, como uniformizar a informação de capa.
+
+[5:52] Outra coisa importante que eu quero fazer também é mostrar o tipo de leitura, tipo de lista de leitura legível para quem está consumindo.
+
+[6:04] Perceba que aqui o tipo é para ler e aqui é zero. Não deveria ser para ler também aqui?
+
+[6:11] A mesma coisa está acontecendo aqui, a lista está zero aqui.
+
+[6:14] Isso tudo está relacionado, gente, com o tipo que eu estou retornando como Action Result lá, então vamos ver isso aqui agora no Visual Studio.
+
+[6:27] Vocês vão perceber que, basicamente, o que eu preciso fazer é retornar o tipo livro/api.
+
+[6:35] Deixa eu abrir o tipo API aqui...
+
+[6:42] Pegar a minha lista aqui, F12, e aqui meu livro/api ele está retornando esse cara aqui como enumerado e aí como vai serializar em Json ele retorna o inteiro respectivo aqui numerado.
+
+[7:00] Então eu quero mandar uma string, o valor da lista... Eu vou ter que fazer algumas modificações, vamos ver onde é que vai dar erro aqui, deixa eu ver.
+
+[7:11] Quando eu mando pra API eu tô tomando um erro aqui porque eu preciso converter esse cara para string.
+
+[7:20] Então essa é a primeira informação aqui que eu vou mandar.
+
+[7:25] agora na lista de leitura EU Acho que eu já vou ter alguma informação consistente, vou dar um Ctrl+Shift+B, ou não contra pra compilar e no Postman aqui quando eu der um SEND...
+
+[7:41] Agora ele está mostrando as informações de maneira uniforme, a lista é para ler e aqui também a lista é para ler. Tudo bem?
+
+[7:50] Agora na recuperação de um livro eu ainda estou mostrando a capa e a lista como enumerado e null, respectivamente, porque na verdade no controlador de livros eu estou retornando ainda uma lista de livro/upload.
+
+[8:13] Livro/upload, eu quero retornar uma lista de livro/api, então em vez de escrever aqui, toModel, eu vou fazer um, toApi.
+
+[8:24] Então esse aqui recupera todos os livros, deixa eu tirar o zoom aqui.
+
+[8:27] E cadê o cara que retorna apenas o livro? Aqui, então recupera, em vez de ser toModel aqui, aqui é toApi, beleza, galera?
+
+[8:47] Daniel, mas e o retorno? Quando é pra fazer uma inclusão e uma alteração, não...
+
+[8:50] Aí nesse caso eu preciso que seja um livro/upload porque eu posso querer incluir um livro com a imagem de capa e aí eu vou precisar da propriedade que representa um arquivo para upload, tudo bem?
+
+[9:08] Então tem que ser esse livro/upload mesmo.
+
+[9:13] Vamos testar agora, vou recompilar aqui a minha aplicação, está tudo compilado e agora na recuperação de um livro, eu vou como retorno, agora sim a imagem de capa uniforme e a lista legível dizendo qual é o tipo da lista, lista para ler.
+
+[9:33] E aí vocês podem pensar, pode até ficar como um desafio para vocês, em vez de retornar à lista eu posso retornar o tipo e a URL, o endereço, a URI, que remete àquela lista, eu posso fazer isso também aqui.
+
+[9:52] Isso pode estar como um desafio para vocês, tudo bem?
+
+[9:53] Vamos partir pros exercícios e na próxima aula a gente conversa sobre o próximo assunto de APIs. Um abraço.
+
+
+
+
+
+
+06 - Consolidando o seu conhecimento
+Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com a próxima aula.
+
+
+
+
+07 - O que aprendemos?
+Nessa aula aprendemos:
+que apis RESTful se baseam no conceito de recursos
+que recursos representam entidades de negócio e podem ser elementos e coleções
+que recursos podem ter subrecursos, que são recursos que dependem de outros recursos (ex. capa de um livro)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -11,7 +11,7 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
 //namespace Alura.WebAPI.AppWeb.Api
 {
     [ApiController]
-    [Route("controller")]
+    [Route("api/[controller]")]
     public class LivrosController : ControllerBase
     {
         private readonly IRepository<Livro> _repo;
@@ -26,10 +26,9 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
         [HttpGet]
         public IActionResult ListaDeLivros()
         {
-            var lista = _repo.All.Select(l => l.ToModel()).ToList();
+            var lista = _repo.All.Select(l => l.ToApi()).ToList();
             return Ok(lista); //Código de status (200)--> Ok - Retornando uma lista de livros no formato Json
         }
-
 
 
         //Get que retorna apenas um livro
@@ -41,7 +40,23 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
             {
                 return NotFound(); //Código de status (404)-->not found
             }
-            return Ok(model.ToModel()); //Código de status (200)--> Ok - Retornando um livro no formato Json
+            return Ok(model.ToApi()); //Código de status (200)--> Ok - Retornando um livro no formato Json
+        }
+
+
+        //Get que retorna apenas um livro
+        [HttpGet("{id}/capa")] //Consultar a capa do livro cadastrado
+        public IActionResult ImagemCapa(int id)
+        {
+            byte[] img = _repo.All
+                .Where(l => l.Id == id)
+                .Select(l => l.ImagemCapa)
+                .FirstOrDefault();
+            if (img != null)
+            {
+                return File(img, "image/png");  //Código de status (200)
+            }
+            return File("~/images/capas/capa-vazia.png", "image/png"); //Código de status (200)
         }
 
 

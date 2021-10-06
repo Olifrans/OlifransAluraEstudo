@@ -25,16 +25,11 @@ namespace Alura.WebAPI.AppWeb
 
         public IConfiguration Configuration { get; }
 
-       
-        
-        
-        
         
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
 
 
             services.AddDbContext<LeituraContext>(options => {
@@ -59,11 +54,8 @@ namespace Alura.WebAPI.AppWeb
 
             services.AddTransient<IRepository<Livro>, RepositorioBaseEF<Livro>>();
 
-            services.AddMvc();
+            services.AddMvc().AddXmlSerializerFormatters();
         }
-
-
-
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,7 +77,6 @@ namespace Alura.WebAPI.AppWeb
             app.UseRouting();
 
             app.UseAuthorization();
-
 
 
             app.UseStaticFiles();

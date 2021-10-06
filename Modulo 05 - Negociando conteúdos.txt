@@ -1,0 +1,106 @@
+Modulo 04 - Negociando conteúdo
+
+
+01 - Negociando tipos de conteúdo
+[0:00] Fala ai pessoal, tudo bem? Certinho, não se esqueça de qualquer dúvida, qualquer detalhamento, qualquer coisa que você queira que a gente se aprofunde, coloca lá a sua dúvida, sua necessidade no fórum e a gente vai tentar te ajudar, beleza.
+
+[0:15] Então é o seguinte na aula anterior falamos de recursos, recursos e o RIS, como você identifica e localiza um determinado recurso através da sua API.
+
+[0:29] Beleza, então por exemplo eu estou aqui com essa URI, e fazendo um GET para essa URI estou obtendo o recurso livro, obtendo informações sobre o recurso livro, especificamente o livro 1008, CSharp e Visual Studio aqui.
+
+[0:48] Beleza, esse recurso API livros 1008/capa. Ah, tem uma correção aí gente, uma correção que eu esqueci de falar, que eu deixei passar na aula anterior, como eu fiz a modificação para colocar API na frente, como primeiro seguimento, nós também temos que fazer isso lá no método de extensão que converte o livro para um API, nós também temos que fazer isso, eu deixei passar, eu fiz essa correção aqui, então dá uma paradinha ai no vídeo e vai lá e faz essa alteração, porque senão você vai ter uma URI para esse subrecurso, imagem de capa errada, equivocada.
+
+[1:36] Beleza, então volta, fecha o parênteses e vamos voltar aqui.
+
+[1:41] Então esse cara aqui, esse recurso, esse subrecurso, que é a imagem de capa, quando eu clico aqui, no Postman eu posso inclusive fazer um GET direto, ele já monta para mim, e eu estou pegando aqui a imagem de capa, percebam que este corpo aqui, não é um JSON.
+
+[1:59] Certo. É uma imagem. Beleza? E como é que o Postman, como uma aplicação cliente que está ai consumindo, o URI, como é que ela está conseguindo mostrar essa imagem de capa aqui.
+
+[2:13] Bom, ela está conseguindo porque existe um valor no cabeçalho da resposta, olha aqui, resposta, cabeçalho, chamado Content Type, e esse Content Type, para essa resposta é um Image/ PNG, tudo bem gente.
+
+[2:33] Beleza, e olha só que interessante esse cabeçalho, esse valor que fica no cabeçalho aqui, também pode ser colocado, você pode exigir, ou solicitar lá na sua requisição um tipo de conteúdo especifico, beleza, então eu aqui no cabeçalho da requisição eu posso definir um valor aqui, uma chave nesse cabeçalho, para dizer que eu quero determinar o tipo de conteúdo, ok.
+
+[3:08] Então por exemplo para subrecurso capa aqui, eu posso querer pedir o recurso JSON dessa imagem capa, e sabe que não faz sentindo nenhum.
+
+[3:20] Mas para isso eu não uso o Content Type, o Content Type é só para a chave que fica no cabeçalho da resposta, quando você quiser pedir alguma coisa na requisição, pedido requisição, você vai criar esse cabeçalho com a chave Accept.
+
+[3:41] Beleza, você vai criar essa chave, e o valor você vai poder dizer, olha eu quero o tipo tal.
+
+[3:48] Beleza, então por exemplo se eu quiser colocar aqui o tipo Application JSON, então eu quero para esse recurso, eu quero obter esse recurso que está identificado aqui e quero que ele seja retornado como um JSON.
+
+[4:13] Será que isso vai funcionar?
+
+[4:14] Não funcionou, continua como Content Type IMG, beleza, continua sendo uma imagem.
+
+[4:20] O que acontece gente é que posso pedir isso para o servidor, e aí o servidor pode simplesmente ignorar esse pedido, então quando você tem o cliente fazendo uma solicitação, ele te pediu um formato específico de tipo de conteúdo e o servidor atendendo ou não, essa solicitação, cabeçalho, a gente diz que isso é chamado de negociação de conteúdo, entre esses dois caras, eles estão negociando conteúdo.
+
+[4:52] Então no inglês Content Negotiation, então quando vocês ouvirem falar esse termo, significa isso, o cliente está pedindo através dessa chave aqui no cabeçalho um tipo específico de conteúdo e o cliente, e o servidor desculpe, vai tentar atender esse pedido.
+
+[5:12] No caso para o subrecurso capa não há como eu atender esse recurso, mas e para o recurso livro, será que eu consigo atender um tipo de formato diferente.
+
+[5:28] Então por exemplo, (vou fechar esse cara aqui, não quero salvar) recuperar um livro já tem tudo aqui.
+
+[5:37] Aqui eu estou pedindo um livro e ele está me mandando o conteúdo default, o formato de conteúdo padrão que é um JSON.
+
+[5:45] Beleza, mas e se eu chegar aqui no meu cabeçalho e pedir XML, eu estava até colocando esse cara aqui testando antes.
+
+[5:57] Então coloquei aqui Accept e escrevi aqui olha.
+
+[6:05] Application XML, então eu estou pedindo esse recurso, estou querendo obter esse livro 1008, só que com o formato XML.
+
+[6:20] Servidor você pode me atender?
+
+[6:23] Vou pedir um SEND aqui.
+
+[6:24] E ele continuou mandando com o tipo de conteúdo JSON.
+
+[6:33] Beleza? Então ele ignorou você, ele ignorou a gente que está fazendo esse pedido.
+
+[6:38] Então, no próximo vídeo eu vou mostrar aqui como que eu faço para o servidor agora começar a negociar e atender, diferentes tipos de conteúdo.
+
+[6:48] A primeira coisa é converter um livro para XML, como será que a gente consegue fazer isso.
+
+
+
+
+
+
+02 - Entregando respostas XML
+[0:00] Então galera, a gente precisa, agora, permitir que o nosso servidor também entregue nossos recursos como um XML.
+
+[0:07] Então, a gente está vendo, por enquanto, não está rolando. Então quando eu peço aqui o Livro, por exemplo, usando no cabeçalho Accept Application XML, se eu apertar o send, eu continuo recebendo no formato Json. Outra maneira de você pedir o XML é Text XML e também não funciona.
+
+[0:36] Então, como é que eu tenho que fazer isso? O que acontece é que o Aspnet Core, por padrão, ele só tem instalados, só tem disponível, o serializador para Json. Então, para fazer a serialização para XML, para entregar o XML, o conteúdo como um XML, a gente vai precisar adicionar um pacote no nosso projeto. Então vamos lá no visual estúdio, vamos fazer isso.
+
+[1:03] Aqui no Visual Studio, botão direito no projeto, gerenciar pacote do Nuget... espero que você não esteja com fome aí agora... e você vai colocar Microsoft, Aspnet Core, já tinha feito isso antes. Aspnet Core MVC Formatters XML. Só uma observação aqui gente, atenção, muita atenção agora. Quando você for instalar esse pacote aqui, eu quero que você instale o pacote, não é o mais recente, eu quero que vocês instalem o pacote dois, ponto, um, ponto, zero.
+
+[1:37] Por quê? Porque, aqui, como dependência do meu projeto, eu estou usando Aspnet Core dois, ponto, um, ponto, zero. Se eu botar o dois, ponto, um que agora é o mais recente, ele vai depender... deixa eu fazer um zoom aqui, ele vai depender de versões superiores ao dois, ponto, um, ponto, um. Você vai ter que ficar atualizando todo mundo e a gente não quer fazer isso agora. Não precisa agora de fazer isso.
+
+[2:06] Volta o zoom aqui e, por favor, escolha dois, ponto, um, ponto, zero. Instala, vamos instalar esse pacote. Já funcionou, já instalou, vou fechar aqui, fecho aqui também essa saída, e agora, o que eu preciso fazer? Agora tenho que fazer uma pequena configuração na minha classe Startup. Classe Startup, eu vou lá na configuração dos serviços e no serviço do MVC, eu vou adicionar o XML Serializer Formatters.
+
+[2:50] Estou falando o seguinte, coloque também, o formatador para XML, que serializa para XML, do seu pipeline MVC, tudo bem? Vamos ver o que vai acontecer agora?
+
+[3:01] Vou compilar minha aplicação e vou testar lá no Postman, não mexi nada aqui, vou manter aqui Teste XML, estou vendo que estou entregando como Json, vou apertar o send e agora gente, vou dar um zoom para vocês verem o que está sendo entregue. Está sendo entregue como XML. Não é mais um Json.
+
+[3:26] Será que se eu colocar aqui Application vai dar certo também? Application XML, apertar aqui o send e, novamente, temos o XML. Content-Type agora, apliquei o application/xml e o corpo é um XML.
+
+[3:47] Nós estamos dando oportunidade do cliente escolher Json e XML. Não é isso?
+
+[3:57] Último ajuste, está aparecendo aqui o tipo da classe, o nome da classe que entrega essa representação de um Livro. Eu não quero mostrar esse detalhe de implementação para fora, para clientes que são de terceiros, eu quero mostrar Livro aqui, que é o nome do recurso, não é isso?
+
+[4:21] Então vamos lá, deixa eu dar um zoom aqui, como é que eu faço isso? Vou lá no Livro API, lá onde está o Livro API que é esse arquivo Livros... está aqui Livro API, e aqui vou colocar uma anotação, um atributo chamado XMLType, onde no construtor, vou dizer que eu quero que se chame Livro. Então na hora de montar o esquema XML, ele vai usar este nome ao invés de nome da classe, tudo bem?
+
+[4:54] Compilar de novo aqui. Vamos fazer o teste, x send aqui e agora ele está mostrando o nome do recurso, não mais o nome da classe porque eu determinei lá.
+
+
+
+
+
+
+
+
+
+
+
+
+
