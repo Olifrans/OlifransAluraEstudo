@@ -9,15 +9,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1-Services", "1-Services", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2-Apps", "2-Apps", "{875089C7-C8FF-4AC1-8225-5E6BCE6C6F59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alura.WebAPI.DAL.Livros", "Alura.WebAPI.DAL.Livros\Alura.WebAPI.DAL.Livros.csproj", "{00607804-92F1-469A-87C8-1FBFD1B229B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alura.WebAPI.DAL.Livros", "Alura.WebAPI.DAL.Livros\Alura.WebAPI.DAL.Livros.csproj", "{00607804-92F1-469A-87C8-1FBFD1B229B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alura.WebAPI.DAL.Usuarios", "Alura.WebAPI.DAL.Usuarios\Alura.WebAPI.DAL.Usuarios.csproj", "{BF199440-D6B8-466E-B934-1B2D4A267168}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alura.WebAPI.DAL.Usuarios", "Alura.WebAPI.DAL.Usuarios\Alura.WebAPI.DAL.Usuarios.csproj", "{BF199440-D6B8-466E-B934-1B2D4A267168}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alura.WebAPI.Model", "Alura.WebAPI.Model\Alura.WebAPI.Model.csproj", "{9BD3355A-7512-4C73-AEF0-898C6C9FD778}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alura.WebAPI.Model", "Alura.WebAPI.Model\Alura.WebAPI.Model.csproj", "{9BD3355A-7512-4C73-AEF0-898C6C9FD778}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alura.WebAPI.Seguranca", "Alura.WebAPI.Seguranca\Alura.WebAPI.Seguranca.csproj", "{C16825D5-7249-4875-995D-5ABD559D57A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alura.WebAPI.Seguranca", "Alura.WebAPI.Seguranca\Alura.WebAPI.Seguranca.csproj", "{C16825D5-7249-4875-995D-5ABD559D57A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alura.WebAPI.AppWeb", "Alura.WebAPI.AppWeb\Alura.WebAPI.AppWeb.csproj", "{1E150BB7-EBDD-4979-BF3C-AA98A41D6DD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alura.WebAPI.AppWeb", "Alura.WebAPI.AppWeb\Alura.WebAPI.AppWeb.csproj", "{1E150BB7-EBDD-4979-BF3C-AA98A41D6DD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
