@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using Alura.ListaLeitura.Modelos;
 using Alura.ListaLeitura.Persistencia;
-using Alura.ListaLeitura.Modelos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Alura.ListaLeitura.WebApp.Controllers
 {

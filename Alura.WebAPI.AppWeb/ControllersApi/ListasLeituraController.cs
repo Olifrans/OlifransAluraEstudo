@@ -1,11 +1,8 @@
 ﻿using Alura.ListaLeitura.Modelos;
 using Alura.ListaLeitura.Persistencia;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Lista = Alura.ListaLeitura.Modelos.ListaLeitura;
 
 
@@ -17,7 +14,6 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
     public class ListasLeituraController : ControllerBase
     {
         private readonly IRepository<Livro> _repo;
-
         public ListasLeituraController(IRepository<Livro> repository)
         {
             _repo = repository;
@@ -51,13 +47,13 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
        [HttpGet("{tipo}")] //Consultar um Livro cadastrado
        public IActionResult Recupera(TipoListaLeitura tipo)
         {
-            //Exemplo de implementação de aotorização bem basica!!!!!Tosca!!!!!!!!!  -----> sem //[Authorize] implementadado
-            var header = this.HttpContext.Request.Headers;
-            if (!header.ContainsKey("Authorization") || !(header["Authorization"] == "123"))
-            {
-                return StatusCode(401);
-            }
-
+            ////Modelo de uma simples implementação de segurança
+            ////Exemplo de implementação de aotorização bem basica!!!!!Tosca!!!!!!!!!  -----> sem //[Authorize] implementadado
+            //var header = this.HttpContext.Request.Headers;
+            //if (!header.ContainsKey("Authorization") || !(header["Authorization"] == "123"))
+            //{
+            //    return StatusCode(401);
+            //}
            var lista = CriaLista(tipo);
            return Ok(lista); //Código de status (200)--> Ok - Retornando um livro no formato Json
        }      

@@ -107,6 +107,126 @@ Modulo 06 - Segurança na API
 
 
 
+03 - O padrão JWT
+[0:00] Então gente está a formula aqui, a gente está mudando o nosso esquema de segurança, a nossa estratégia de segurança de uma que é baseada em Cookies, onde tem um acoplamento entre a primeira requisição e as outras.
+
+[0:17] E para uma estratégia de segurança baseada em Tokens, onde a requisição de autenticação é enviada, e o servidor se estiver tudo OK, envia uma mensagem de OK, mas passa também um Token com todas as informações necessárias para que novas requisições sejam feitas, sendo que não exista nenhum tipo de acoplamento aqui no servidor.
+
+[0:51] Isso futuramente vai nos permitir inclusive, em uma coisa que você já faz aí em aplicações, até no seu celular, isso vai permitir com que você utilize provedores de segurança de terceiros.
+
+[1:07] Você por exemplo faz autenticação usando a sua conta do Facebook, a sua conta do Google, então a segurança, a autenticação, é provida por esses caras de terceiros que enviam um Token, para você, para a aplicação que está querendo, acessar lá os serviços e a partir disso, desse Token, ele faz toda a solicitação, todo o seu consumo de serviços lá.
+
+[1:42] mas por enquanto, nós mesmos vamos nos responsabilizar pela autenticação e pela criação do Token.
+
+[1:50] E aí eu falei o seguinte, o Token que a gente criou, aqui na nossa lista controle, é horrível, porque se essa informação ela passar, alguém consegui enxergar, vai ver essa informação e vai utilizar.
+
+[2:05] Então isso aqui não é viável, a gente precisa de um padrão um pouco mais robusto, mais consistente em relação a segurança.
+
+[2:16] E um desses padrões, um padrão desse de segurança e o JWT, de Java Script Web Token, que é uma especificação, que está aqui, deixa eu abrir para vocês o site.
+
+[2:32] Eu vou abrir inclusive um sitezinho que tem algumas explicações, inclusive para vocês depois testarem os seus Tokens, eu vou explicar daqui a pouquinho.
+
+[02:48] Está falando aqui, que é especificação 7519, aqui explica um pouquinho, uma maneira de representar direitos, reivindicações que podem ser transferidas entre parceiros e isso é feita através daquele Token lá que a gente viu.
+
+[3:08] Mas como é formado esse Token?
+
+[03:11] Como que é composto esse Token, já que é um Json, eu falei Java Script, não é, é Json Web Token, então é um objeto Java Script.
+
+[3:20] Como que é essa estrutura desse objeto?
+
+[3:23] E aqui esse sitezinho que vai ficar na prescrição também, vou colocar esse endereço aqui, esse sitezinho ele dá além de te ensinar como utilizar, e como entender o que significa, ele dá também algumas maneiras de você utilizar aqui, e entender um Json Web Token.
+
+[03:42] Um Json Web Token é uma String, um texto, totalmente codificado, criptografado, usando base 64, e tem três partes esse cara, e são separadas essas três partes pelo símbolo ponto.
+
+[3:59] Que três partes são essas, primeiro, cabeçalho onde você diz qual é o algoritmo de criptografia e qual é o tipo de Token, no caso aqui para essa String que está aqui, já de exemplo, quando eu abri o site, o algoritmo é HS256 e o tipo é o Json Web Token, beleza.
+
+[4:22] Aqui na segunda parte do Json Web Token são informações, são aquelas informações que eu tinha falado para vocês, que são todas as informações necessárias para a sua aplicação, para o seu serviço, que o seu serviço pode precisar em futuras requisições.
+
+[4:40] Por exemplo aqui nós temos, uma propriedade, um atributo aqui chamado sub que é o sujeito, então esse Token diz respeito ao sujeito chamado 1234567890, é o nome do sujeito, nós vamos colocar um LOGIN, nesse atributo, você pode definir também os seus próprios atributos, aqui tem por exemplo, nome, John Doe, e aqui e justamente quando esse Token foi gerado, existem outras informações aqui, algumas informações que são, já requeridas, requeridas não, são informações já registradas, olha aqui Claim Names, nomes de reivindicações, esqueci de colocar o Zoom tem quem está gerando essa reivindicação, para que sujeito, para que audiência, quando vai expirar, e outras informações aqui.
+
+[5:52] Aqui é um identificador exclusivo para esse Token específico, e você pode usar esses nomes de reivindicações registradas, ou você pode criar os seus próprios.
+
+[6:06] E falei da primeira parte, falei da segunda, a terceira parte que é justamente a parte onde vai haver uma criptografia dessas duas partes, junto com uma senha, um segredo, grande, onde tem que ter 265bits, como esse algoritmo aqui de criptografia, para gerar essa terceira parte aqui.
+
+[6:37] E aí isso aqui vai ser enviado, de volta, quando a aplicação for autenticar o pedido,
+
+[6:48] Então para dar alguns nomes aqui, deixa eu aproveitar, esse cara aqui agora cliente, é o audiência, e esse cara aqui é o cara que dá o Json Web Token, é o juiz que dá o Json Web Token e o usuário, deixa eu ver se consigo colocar aqui.
+
+[7:12] O usuário é o cara que está pedindo, aqui ficou muito grande, deixa eu dar uma diminuída aqui.
+
+[7:20] Esse cara aqui é o Subject, é para quem esse Token foi pedido.
+
+[7:28] E como que isso fica no .NET, como é que a gente implementa esse JWT no .NET.
+
+[7:33] Vamos lá, vamos mexer no Visual Studio aqui, a primeira coisa que eu vou fazer é remover esse negócio aqui, que está cavernoso, muito ruim mesmo, vou voltar a autorizar esse cara, beleza, então agora eu voltei ao que tinha, deixa eu fechar aqui, o que eu vou ter que fazer gente, é mexer na minha classe de Start Up.
+
+[7:56] Primeiro eu preciso instalar dois pacotes aqui, um pacote com as interfaces do JWT, padronização e tudo mais, que fica aqui nesse pacote System Identity Model Tokens JWT, tipos que dão suporte para criar, sinalizar e validar JWT, vamos instalar esse cara, e o outro pacote, vai ser justamente para integrar o Pipeline, ao Pipeline, a parte de autenticação, do JWT é esse cara aqui, Authentication JWT Bearer.
+
+[8:38] E novamente gente, atenção aqui, para tudo que está fazendo aí e olha para o vídeo com muita atenção, com os dois olhos, olha só gente, quero que vocês instalem a versão dois ponto um ponto zero, OK, porque senão a gente vai ter que atualizar todas as outras versões ai do ASP NET Core, beleza, então vamos instalar.
+
+[9:06] Instalou aqui o JWT Bearer e agora vamos ver o que a gente vai fazer na classe Start Up.
+
+[9:13] Então gente na classe Start Up o que eu vou fazer aqui é adicionar uma nova autenticação, uma nova maneira de autenticação, e essa maneira de autenticação.
+
+[9:27] Opa, services, Add Authentication eu vou colocar algumas opções nessa autenticação aqui, a gente não vai mais usar a autenticação padrão que está aqui.
+
+[9:50] Então as opções seriam as seguintes.
+
+[9:55] O esquema de autenticação padrão será chamado JWT Bearer, não se se você já viu, Senhor dos Anéis e o Frodo era conhecido como o portador do anel, o Bearer Ring, então Bearer é justamente quem vai portar, quem vai ser o portador do Json Web Token, então lembre-se disso, Bearer portador, Frodo Senhor dos Anéis, muito bom o filme, quem não viu, lamentável, bom, Default Challenge Scheme também vai ser o mesmo cara, esse aqui, e agora a gente precisa adicionar justamente o nosso esquema, JWT Bearer o nome dele é esse aí que nós estamos falando Bearer, ok, e nós vamos agora definir algumas opções usando aqui o nosso código lambda para não ter que fazer mais nenhum de criar métodos, nem nada, e a gente vai criar o seguinte olha eu vou dizer que a autenticação, os parâmetros para autenticar o Token, iram ser feitos através desse objeto que eu vou criar aqui.
+
+[11:28] Deixa eu dar um Control ponto aqui para pegar esse cara e agora eu vou criar um usuário aqui.
+
+[11:34] Então olha só, antes de a gente ver isso aqui eu quero voltar para o nosso, esqueminha aqui, para dizer o seguinte, quando um Token for enviado na requisição o Issuer, o cara que vai fazer a validação do Token precisa ter, precisa saber como que ele vai validar, e é justamente isso que nós estamos configurando ali, tudo bem.
+
+[12:04] Então, vamos lá primeiro eu vou dizer o seguinte, que eu vou validar.
+
+[12:19] Quem está pedindo, quem é a pessoa, quem é o juiz, que cria esse Token, eu vou validar também quem está pedindo, e vou validar também a expiração.
+
+[12:38] Todos eles eu vou validar, então isso é a primeira coisa que a gente vai fazer.
+
+[12:44] Outra coisa é justamente a chave de assinatura que será utilizada pelo Issuer, pelo cara que está validando isso aí, essa chave eu vou usar este cara aqui Symmetric Security Key, OK.
+
+[13:05] E aqui eu vou usar justamente a senha.
+
+[13:18] Como chave, beleza, vou pegar aqui os Bits de um valor que eu vou escrever aqui, tem que ser um valor que vai gerar mais do que 256 Bits, então eu vou colocar aqui alura webapi authentication valid, aqui não é ponto e virgula é virgula, então essa vai ser a chave que será usada para validar lá no juiz.[00:13:54] O que mais está faltando, está faltando também a gente dizer.
+
+[14:02] Qual é, a partir de quanto tempo, qual é a folga que ele vai usar na expiração, eu vou dar aqui.
+
+[14:14] Uma duração ai de cinco minutos.
+
+[14:25] Cinco minutos, que mais que nós temos aqui.[00:14:40] Ah, eu preciso agora passar o nome dos caras aqui, então é o Issuer, aqui é uma string deixa eu ver, não isso aqui é uma string não é isso, então o cara que é valido é justamente alura webapp que é essa própria aplicação.
+
+[15:04] Já uma audiência válida, eu vou usar o Postman, mas esses valores, são valores muito arbitrários, só estou querendo identificar para vocês saberem o que eu vou fazer, o que eu vou usar como cliente como audiência o Postman e quem está fazendo a validação é essa própria aplicação aqui.
+
+[15:24] Não sei se está faltando alguma coisa, não me lembro da minha cola, deixa eu ver Issuer, Reader, Validator, acho que é só isso.
+
+[15:38] então eu identifiquei aqui, coloquei aqui, criei essa autenticação, diz que agora o esquema default é esse JWT Bearer, e defini as opções aqui para a validação do Token.
+
+[15:54] Então isso é feito na hora que o Token chega da requisição, mas e a criação do Token.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
