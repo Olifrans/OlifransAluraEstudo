@@ -208,18 +208,218 @@ Modulo 06 - Segurança na API
 
 
 
+04 - O que é JWT?
+Qual das opções abaixo melhor define o JWT?
+Selecione uma alternativa
+JWT se trata de JSON Web Tokens, que nada mais é que uma string criptografada usando base 64.
+
+
+
+
+05 - Implementando o JWT
+Vimos que precisamos instalar dois pacotes para implementar o JWT em nosso projeto. Quais opções abaixo representam esses pacotes?
+
+Selecione 2 alternativas
+
+Microsoft.AspNetCore.Authentication.JwtBearer
+
+System.IdentityModel.Tokens.Jwt
 
 
 
 
 
+06 - Criando o endpoint de autenticação
 
+[0:00] Então nós já configuramos a nossa aplicação para mudar o esquema de segurança de cookies para token, especificamente o padrão JWT, Json Web Token.
 
+[0:13] Nós já colocamos aqui o código para autenticação, para validação do token ser feita usando aquelas configurações ali.
 
+[0:22] Só que agora a gente tem que criar esse token, quando alguém fizer um login, tentar se autenticar a gente vai verificar se ele existe na base, usando a Identity e tem que gerar um token.
 
+[0:36] A gente vai fazer isso agora nesse vídeo.
 
+[0:39] Pra isso a gente vai criar um novo controlador na API, então aqui nessa pasta API eu vou criar um novo controlador e esse controlador eu vou chamar de login, LoginController.
 
+[1:00] Esse controlador é um controlador direto da API, então é um ControllerBase.
 
+[1:03] É bom para gente fazer uma revisão rápida aí.
+
+[1:08] E a rota dele a gente sabe que é Api/[controller], entre colchetes aí.
+
+[1:16] Nós mas vamos ter apenas uma Action aqui no token que vai validar o nosso usuário, que vai ser enviado como argumento de entrada aqui e vai gerar esse token retornando 200 se tudo der certo.
+
+[1:41] Então, gente, esse código uma parte dele já está pronta, não é isso? Vou mostrar para vocês aqui, no código do usuário controle, que é um controller típico do MVC, nós temos aqui um código que faz o login.
+
+[1:59] Olha só, esse código aqui é o código que faz o login, ele recebe um login model como argumento de entrada, esse login model, vou mostrar pra vocês: Têm login e senha, nada demais.
+
+[2:16] Fechando aqui... E se tiver tudo certinho o model state estiver válido Ele vai tentar fazer o signin através de uma senha.
+
+[2:28] De login e senha como está aqui... Vai usar esse mesmo código, só que aí o que vai mudar é justamente que agora você não vai mais fazer um redirect ou retornar um view, nem nada disso, a gente vai fazer um código diferente.
+
+[2:41] Então, olha só, o que a gente precisa lá no nosso controlador? Precisamos desse cara aqui que é um signInManager, olha só, signInManger é uma classe do Identity pra fazer justamente a autenticação.
+
+[2:57] Então nós vamos copiar esse cara aqui e vamos pedir encarecidamente para o Asp.Net CORE injetar pra gente esse serviço.
+
+[3:10] Deixa eu importar esse aqui os namespaces, tanto do Identity como do usuário e eu vou pegar esse cara aqui e vou pedir pra ser injetado no meu construtor.
+
+[3:22] Está me sugerindo aqui esse nome e eu vou aceitar a sugestão, signInManager... Eu já injetei esse cara aqui.
+
+[3:32] Então, gente, vamos lá, aqui ele vai receber um login model como argumento de entrada, que tem login e tem a senha.
+
+[3:42] E aí o que a gente vai fazer? Se o estado do modelo escolhido for válido eu vou fazer alguma coisa aqui, agora se ele não for válido, o que eu vou retornar? Um Bad Request, Daniel, presta atenção.
+
+[4:06] Agora o que a gente vai executar quando estiver já com um modelo válido .
+
+[4:11] Com o modelo válido o que eu vou fazer é pegar o resultado de uma operação de autenticação, signInManager.Password... Pera aí que eu botei um negócio errado aqui.
+
+[4:31] Password.signInAsync, onde eu vou passar o login e a senha que eu botei... Hoje eu estou bom, hein, hoje eu estou bom...
+
+[4:43] True e true e fecha e ponto e vírgula...
+
+[4:46] Bom, está dando um erro aqui, por quê? Esse método aqui é um método assíncrono e pra usar um método assíncrono como o await eu preciso declarar aqui o Async e retornar uma task neste método.
+
+[5:01] Então ele vai fazer essa autenticação e eu vou verificar o resultado do result, se o result for bem sucedido aqui eu vou criar o token, finalmente... Chegou lá.
+
+[5:16] Mas se não for bem sucedido o que eu vou retornar? Vou retornar Unauthorized, ou seja, 401... 401 aqui, aqui é 400...
+
+[5:30] Todos erros que são da requisição, ou a requisição está inválida, bad request, ou a requisição está válida, mas o usuário não conseguiu se logar.
+
+[5:44] Agora vamos para o mais importante aqui, vamos criar o token.
+
+[5:49] Criar o token é criar aquele Json.... Eu vou retornar aqui return, tudo vai dar certo, vai dar ok e eu vou retornar o token aqui.
+
+[6:02] Esse cara aqui nada mais é do que uma string, que eu vou até chamar de TokenString.
+
+[6:16] Eu por enquanto vou inicializar essa string com um vazio... Daniel, está enrolando, rapaz, presta atenção.
+
+[6:22] Então olha só, como é que a estrutura desse token? Vou olhar aqui de novo naquele endereço, jtw.io para eu relembrar vocês que a estrutura de um Json Web Token tem três partes.
+
+[6:39] Essa parte aqui, que é o cabeçalho, a parte onde o chamado payload, onde eu vou colocar algumas informações que vão ser transmitidas a cada requisição.
+
+[6:50] Então tudo que você precisar de informação para utilizar na autenticação para usar como usuário você vai passar essa informação aqui.
+
+[7:02] E a última parte é justamente a assinatura, a assinatura de verificação, que é uma combinação dessas duas partes mais uma criptografia de chave uma secreta, que é a sua senha. É uma chave que você vai usar.
+
+[7:19] A gente vai gerar nosso Json Web Token, a gente vai gerar esse cara aqui, o payload e assinatura.
+
+[7:27] Na verdade, a senha criptografada, o segredo criptografado.
+
+[7:31] Então vamos lá, enrolação é meu nome.
+
+[7:35] Deixa eu só botar aqui header + payload + signature.
+
+[7:45] Vamos lá, a primeira coisa que eu vou gerar então, o header vai ser definido pela própria classe que vai gerar o JWT.
+
+[7:55] Então eu vou trabalhar em cima do payload.
+
+[7:57] O payload, na verdade, são nossas claims ou direitos, reivindicações... Então eu vou criar aqui uma variável onde eu vou criar um array anônimo, onde eu vou colocar todas as claims que eu quero.
+
+[8:24] Esse cara aqui vai ter o seguinte nome, JWTRegisteredClaimsNames, então eu vou usar aquele Sub, não sei se vocês lembram, aqui no enumerado para dizer qual é o nome dessa claim.
+
+[8:49] E aqui o nome vai ser o login, eu tinha falado que a gente ia fazer isso, a gente ia usar o sub, o sujeito desse token é o login do usuário.
+
+[8:58] Vou criar uma outra claim também que é uma claim para o nome registrado que é o JTI, é um identificador único pra esse token, e eu vou gerar esse token usando nossa classe que gera um valor único, guid.
+
+[9:20] Vou transforma-lo numa string... Vou usar por enquanto esses dois direitos aí.
+
+[9:26] Então vai ter um array que tem esses dois claims, então, na prática, eu teria apenas dois caras aqui, dois que fazem melhor...
+
+[9:36] Vou pagar esse cara aqui. Na prática eu teria um sub com o nome admin e aqui seria o JTI com um valor único.
+
+[9:53] Vamos lá, vamos continuar... Então eu estou jogando esses dois caras aqui.
+
+[9:56] O próximo passo, então, já resolvemos aqui, agora vamos gerar essa assinatura.
+
+[10:02] A assinatura começa com uma chave, e a chave, gente, tem que ser compartilhada com a chave que está aqui na configuração.
+
+[10:11] Uma coisa que eu esqueci de fazer aqui, é dizer que eu vou validar justamente essa chave. Uma coisa que eu esqueci, perdão aí.
+
+[10:26] E eu vou usar esta chave, essa mesma chave... Então estou dando um copypaste e vou colocar aqui ctrl+V, ponto e vírgula, preciso importar esse namespace.
+
+[10:43] Vou subir aqui um pouco o código para vocês verem melhor.
+
+[10:45] O próximo passo então é gerar as credenciais que vão ser utilizadas para gerar assinatura do Json Web Token.
+
+[10:55] Isso é feito através de uma classe chamada signInCredencials, e essa SignInCredencials vai usar a chave que a gente acabou de gerar lá em cima e um algoritmo.
+
+[11:09] Esse algoritmo é um enumerado, securityAlgorithms, e eu vou usar o HS.
+
+[11:16] Esse cara aqui. Que eu não sei o nome que está aqui, mas ele está aqui também, gente, HS256... É este algoritmo aqui, de criptografia.
+
+[11:33] Então gerei as credenciais, agora nós já temos condição de gerar o Json Web Token.
+
+[11:38] Eu vou chamar aqui de token, esse objeto que será gerado, aí será um JWTSecurityToken.
+
+[11:50] E esse cara nós vamos passar várias informações para ele.
+
+[11:56] Essas informações eu vou colocar no construtor e eu vou usar aqui, porque eu não lembro a ordem direita, eu vou usar parâmetros nomeados, pra passar como argumento aqui nos meus construtores. Named parameters, é só botar o nome do parâmetro seguido de dois pontos.
+
+[12:16] Então primeira coisa, olha, o issuer... Qual é o issuer mesmo? Alura.Webapp.
+
+[12:16] Olha só, o issuer é esse cara aqui, e o audience? É o Postman.
+
+[12:33] Então eu vou passar aqui como audience, Postman.
+
+[12:41] O que mais? Eu tenho que passar as claims.
+
+[12:44] As claims eu vou passar aqui, a referência para o array.
+
+[12:51] Além disso eu tenho que passar também as credenciais que já estão ali, credenciais...
+
+[12:59] E por último eu tenho que informar quando esse token vai expirar.
+
+[13:03] Esse token irá expirar a partir de agora, a daqui trinta minutos.
+
+[13:16] Na verdade, a partir do momento em que esse código foi executado, agora não.
+
+[13:20] Então agora eu tenho token, eu consegui gerar o token, muito bem, finalmente, parou de enrolar, hein...
+
+[13:26] E agora, gente, eu preciso transformar esse token em uma string, pra isso irei utilizar uma classe chamada SecurityTokenHandler, onde eu vou escrever o token passando ele como argumento.
+
+[13:28] Esse é o método para gerar esse JWT, Json Web Token.
+
+[13:54] Vamos testar, agora a gente precisa testar se isso aqui vai funcionar.
+
+[13:58] Então, gente, eu vou dar um ctrl+shift+B, vou compilar essa aplicação e agora vou lá no Postman e vou criar um nova abinha aqui para testar esse cara.
+
+[14:15] Vou copiar esse cara pra cá, deixa eu botar aqui, vou dar um zoom aqui pra vocês enxergarem melhor.
+
+[14:26] A gente viu lá que é um post... É um post? A gente fez um post? Agora fiquei na dúvida.
+
+[14:32] Deixa eu ver no LoginController... Eu não indiquei que era um post.
+
+[14:40] Ctrl+shift+B para compilar novamente, deixa eu fechar aqui... Volto no Postman, Postman post, onde eu vou fazer uma ApiLogin.
+
+[14:50] No cabeçalho eu vou passar um Json e esse Json é formado pelo login, cujo valor é admin e a senha... Password... Password é aquela senha super secreta, super difícil, 1 2 3.
+
+[15:16] É aquela mesma senha que estou usando no login, naquele formulário de login.
+
+[15:22] Minha expectativa é que isso aqui funcione, vamos ver, talvez não funcione, é um post pra cá... Vamos ver.
+
+[15:34] Muito bem, gente, então, olha, nosso código funcionou, retornou um status 200, com um cara aqui chamado... Com um Json Web Token aqui.
+
+[15:48] Pra vocês verem essa informação eu vou passa-lo para cá.
+
+[15:56] E olha que legal, gente, olha aqui, o sub é o admin, aquele JTI é aquele guid, vai esperar daqui a 30 minutos.
+
+[16:06] Issuer é aquele valor que eu botei e aud é o postman.
+
+[16:12] O tipo é JWT e o algoritmo HS256.
+
+[16:14] Então nós geramos um web JWT, o nosso código, fez o login, retornou esse cara, então agora eu posso usar esse valor para autenticar a minha API.
+
+[16:28] Então, por exemplo, se eu quiser recuperar um livro, fazer um get nesse cara aqui que eu dou um send.
+
+[16:36] E eu estou tomando um 401, que não foi autorizada, agora eu tenho que passar esse JWT na autenticação.
+
+[16:43] No Postman ele já prevê essa possibilidade de usar uma autenticação via Bearer, via token.
+
+[16:56] Então agora eu tenho que passar aqui aquele token que foi gerado.
+
+[17:04] Feito isso eu vou dar um send aqui e agora o status é 200 e eu tenho o meu livro novamente como resposta, e agora meu endpoint está autenticado.
+
+[17:21] E ele está autorizado, usando agora um esquema de segurança baseado em tokens, com o padrão JWT.
 
 
 

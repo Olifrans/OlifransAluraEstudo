@@ -56,7 +56,7 @@ namespace Alura.ListaLeitura.WebApp.Controllers
 
 
 
-        // Obsservção testar o retorno dos metodos no brouwser
+        // Observção testar o retorno dos metodos no brouwser
         public Livro RecuperaLivro(int id) //Metodo especifico de busca no repositorio --> Também pode ser usado por uma Action e recupera a imagem da capa do livro
         {
             return _repo.Find(id);

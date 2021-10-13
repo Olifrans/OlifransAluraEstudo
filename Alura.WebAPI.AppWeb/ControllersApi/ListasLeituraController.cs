@@ -1,5 +1,6 @@
 ﻿using Alura.ListaLeitura.Modelos;
 using Alura.ListaLeitura.Persistencia;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using Lista = Alura.ListaLeitura.Modelos.ListaLeitura;
 
 namespace Alura.WebAPI.AppWeb.ControllersApi
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ListasLeituraController : ControllerBase
@@ -47,14 +48,18 @@ namespace Alura.WebAPI.AppWeb.ControllersApi
        [HttpGet("{tipo}")] //Consultar um Livro cadastrado
        public IActionResult Recupera(TipoListaLeitura tipo)
         {
-            ////Modelo de uma simples implementação de segurança
+            ///Simples modelo de uma implementação de segurança --> Cavernoso!!!! muito ruim
             ////Exemplo de implementação de aotorização bem basica!!!!!Tosca!!!!!!!!!  -----> sem //[Authorize] implementadado
             //var header = this.HttpContext.Request.Headers;
             //if (!header.ContainsKey("Authorization") || !(header["Authorization"] == "123"))
             //{
             //    return StatusCode(401);
             //}
-           var lista = CriaLista(tipo);
+
+
+
+
+            var lista = CriaLista(tipo);
            return Ok(lista); //Código de status (200)--> Ok - Retornando um livro no formato Json
        }      
     }

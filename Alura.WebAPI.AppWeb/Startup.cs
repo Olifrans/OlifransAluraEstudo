@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Timers;
 
 namespace Alura.WebAPI.AppWeb
 {
@@ -53,6 +56,27 @@ namespace Alura.WebAPI.AppWeb
             services.AddMvc(options => {
                 options.OutputFormatters.Add(new LivroCsvFormatters()); 
             }).AddXmlSerializerFormatters();
+
+
+            //Injeção de dependencia JwToken
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = "JwtBearer"; //Portador do Json Web Token => exemplo Frodo do filme o Senhor dos Aneis
+                options.DefaultChallengeScheme = "JwtBearer";            
+            }).AddJwtBearer("JwtBearer", options =>{
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true, //Juiz que validar
+                    ValidateAudience = true, //Quem esta pedido
+                    ValidateLifetime = true, //Tempo de expiração
+
+                    //Chave de assinatura que sera usada para validar no Juiz
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("olifrans_estudo_webapi_authentication_valid")),
+                   
+                    ClockSkew = TimeSpan.FromMilliseconds(5), //Tempo de validação do Tokem
+                    ValidIssuer = "Alura.WebAPI.AppWeb",
+                    ValidAudience = "Postman",
+                };
+            });
         }
 
 

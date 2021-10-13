@@ -6,7 +6,6 @@ using System.Linq;
 
 
 namespace Alura.WebAPI.AppWeb.ControllersApi
-//namespace Alura.WebAPI.AppWeb.Api
 {
     [Authorize]
     [ApiController]
