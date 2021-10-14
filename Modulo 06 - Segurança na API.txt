@@ -428,11 +428,34 @@ System.IdentityModel.Tokens.Jwt
 
 
 
+07 - Informações do token
+Vimos que precisamos passar diversas informações para geração do token. Qual das opções abaixo não representa um parâmetro que deve ser informado?
+
+Selecione uma alternativa
+signingCredentials
+audience
+claims
+issuer
+expires
+
+
+dataSet --> esse
+
+
+08 - Consolidando o seu conhecimento
+Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com a próxima aula.
 
 
 
 
+09 - O que aprendemos?
+Neste capítulo, aprendemos:
 
+Como e qual o motivo de protegermos nossa API
+O que é o JWT
+Como implementar o JWT
+Conceito de cookies e sessões
+Como gerar tokens
 
 
 

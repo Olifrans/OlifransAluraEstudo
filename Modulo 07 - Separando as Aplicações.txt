@@ -1,0 +1,179 @@
+Modulo 07 - Separando as Aplicações
+
+01 - Separando o provedor de autenticação
+
+[0:00] Muito bem, pessoal. Na aula anterior, então, a gente colocou segurança na nossa API, nos nossos endpoints, e, quando a gente fez isso, a gente percebeu que a solução de autenticação e autorização estava acoplada.
+
+[0:14] Ele dependia de uma primeira requisição para colocar um cookie de sessão e, a partir daí, eu poder fazer os acessos autorizados.
+
+[0:25] A gente viu que essa solução para uma API não funciona, porque a gente pode ter requisições completamente isoladas.
+
+[0:33] A gente, então, fez a migração para um esquema de segurança baseado em tokens, e a gente implementou a autenticação baseada em JWT, tudo bem?
+
+[0:44] E agora eu vou executar a aplicação aqui Web tradicional, apertando Ctrl + F5, e o que vai acontecer é que eu vou tomar um erro 401, de não autorizado, justamente porque agora eu troquei o esquema de segurança e ele não está mais redirecionando para a página de login. Beleza, gente?
+
+[1:03] O que eu faço nessa situação? Na verdade, o que está acontecendo é que eu preciso, de fato, separar a aplicação que mostra a apresentação - essa nossa aplicação web tradicional -, separar isso da parte que gera o token, o provedor de tokens, e é o que a gente vai fazer nesse vídeo.
+
+[1:26] Nós vamos criar um novo projeto e a gente vai pegar toda a parte de geração de token e colocar esse projeto.
+
+[1:33] Vamos lá. Então eu vou colocar esse projeto aqui no Serviços, nessa pasta de solução Serviços, vou criar um novo projeto do tipo ASP.NET Core e o nome que eu vou dar para ele é Alura WebAPI.AuthProvider - provedor de autenticação. Tudo bem?
+
+[1:55] Vou apertar ok aqui e vou definir que eu quero um projeto vazio - não quero colocar nada, eu vou colocar tudo lá -, para o ASP.NET Core 2.1 e eu não quero HTTPS, uma solução local aqui, não quero mexer com isso por enquanto.
+
+[2:10] Vou apertar ok e ele vai gerar esse projeto para mim, gente, aqui.
+
+[2:16] E vou fazer duas modificações importantes aqui: para esse cara aqui, eu vou no AuthenticationProvider, esse projeto, e vou dizer que ele vai iniciar como uma aplicação standalone, uma aplicação de terminal.
+
+[2:32] Propriedades. Beleza?
+
+[2:37] Agora só estou pegando esse cara aqui, então essa é a primeira modificação que eu quero fazer, porque ele vai ficar como se fosse um serviço rodando, não tem interface nenhuma nesse cara, beleza, gente?
+
+[2:48] O que eu vou fazer agora em seguida?
+
+[2:50] Agora eu vou colocar o controlador, aquele controlador da API que gera o token, e vou copiar ele para cá.
+
+[2:56] Esse cara está aqui nessa pasta API, LoginController, vou dar um Ctrl + C, ou então copiar - deixa eu fechar aqui -, e aqui nesse projeto colar.
+
+[3:08] E aí vai dar uma porção de erros.
+
+[3:10] Vou abrir esse cara aqui e vamos ver o que vai acontecer.
+
+[3:13] Primeira coisa, vou mudar aqui o namespace dele e vou usar o namespace ListaLeitura.Services, para poder ficar com o padrão que a gente está usando de namespace para esse problema aqui. Ok, gente?
+
+[3:32] Está dando erro aqui porque eu preciso importar esses caras, o usuário e o loginModel.
+
+[3:37] O nosso projeto, esse projeto AuthenticationProvider, precisa, depende de dois projetos que estão ali naquela pastinha Common: o projeto que tenha a persistência de usuário e o projeto que tem a parte de segurança, as classes relacionadas à segurança. Ok?
+
+[3:56] Quando eu fizer isso, ele já vai começar a funcionar aqui e compilar. Tudo bem, gente?
+
+[4:03] Então já tem agora o meu controlador funcionando ok.
+
+[4:06] O que eu preciso fazer agora, gente? Deixa eu ver o que eu preciso fazer.
+
+[4:15] É configurar, lá no meu Startup, justamente que eu vou usar o MVC - e para isto eu preciso também adicionar esse serviço aqui no meu pipeline.
+
+[4:42] E outra coisa que eu preciso fazer é injetar o contexto de persistência para usuários e também colocar e configurar o identity.
+
+[4:58] Isso tudo está lá naquela classe Startup da aplicação tradicional, que são esses dois caras aqui.
+
+[5:10] Aqui então eu vou copiar para cá, injetando esses dois serviços.
+
+[5:15] Preciso agora adicioná-los ao namespace. Adicionei esses caras.
+
+[5:23] Preciso também adicionar aqui a extensão para o Entity Framework Core e também configurar, pegar a parte de configuração que está aqui declarada como uma propriedade.
+
+[5:42] E esse cara eu também preciso importar o namespace dele.
+
+[5:46] E pronto, agora nós temos como já testar.
+
+[5:50] Ctrl + F5., ele abriu esse cara aqui, está escutando na porta localhost:5000, e nós temos apenas um endpoint, que é o login.
+
+[6:01] Então, vamos lá no Postman, vamos criar esse cara.
+
+[6:05] Vou botar aqui um login, é um POST /api/login. Certo?
+
+[6:13] E eu preciso colocar um corpo, lembram disso?
+
+[06:18] Qual é mesmo? É a propriedade chamada login admin, e a senha, password, 123.
+
+[6:36] E aí? Será que vai funcionar?
+
+[6:38] Vou apertar um send aqui. Deu um erro.
+
+[6:42] Eu esqueci de uma coisa. Vamos ver o que vai aparecer aqui no erro.
+
+[6:48] Aqui o erro é que a connection string está nula, então tem que adicionar também essa connection string lá no meu servidor.
+
+[7:00] Ctrl + C aqui para poder parar esse serviço.
+
+[7:04] Eu aqui preciso adicionar, novo item, um arquivo de configuração, para colocar justamente a connection string para acessar o banco onde estão os usuários. Tudo bem, gente?
+
+[7:30] Será que vai funcionar agora? Ctrl + F5 para rodar esse cara, está escutando, e agora eu vou no Postman e enviar de novo a informação.
+
+[7:41] E agora nós temos o nosso token sendo gerado, então nós separamos a API para geração do token, colocamos em novo projeto, que está rodando aqui, só que ainda estou com o problema da aplicação tradicional com a autenticação via token.
+
+[8:01] Então, olha só: eu vou agora pegar esse cara, colocar como inicialização e, no Startup o que eu vou fazer é simplesmente, gente, é limar a opção de autenticação via JWTBearer. Ok?
+
+[8:20] Vamos ver o que vai acontecer? Ctrl + F5, ele vai tentar autenticar, não vai conseguir e vai cair na página de login.
+
+[8:28] Agora eu consigo logar e usar essa aplicação.
+
+[8:33] Então agora eu separei a aplicação que gera o token em um serviço e a aplicação web tradicional ficou funcionando normalmente.
+
+[8:45] O próximo passo agora é separar justamente a API, em que temos os nossos endpoints de livros aqui.
+
+[8:56] Isso a gente vai fazer no próximo vídeo.
+
+
+
+
+
+
+02 - Checklist para Fabíola
+Fabíola deseja criar um projeto separado para prover a autenticação via token. Vamos lembrar a ela o que deve fazer. Para isso, selecione todas as alternativas corretas.
+
+Selecione 5 alternativas
+
+Mudar a forma de execução do projeto de um módulo do IIS Express para um executável standalone.
+
+
+Criar um arquivo de configuração (appSettings.json) com a string de conexão para o banco de dados de autenticação.
+
+
+Importar os projetos com as bibliotecas de classes necessárias.
+
+
+Mover os controladores com seus endpoints para o projeto.
+
+
+
+
+
+
+03 - Separando a api
+[0:00] Muito bem pessoal. Então finalizando nosso curso aqui, essa primeira introdução, essa introdução à parte de Web API, usando Aspnet. Nossa aplicação, agora, já pode entrar em produção.
+
+[0:14] Mas, pensa comigo o seguinte, nossa aplicação está ainda com a parte de layout, entregando rotas, com rotas que entregam HTML, mas também está com a parte de API. A gente separou, inclusive, as rotas. A parte que começa com seguimento API e a parte que não tem esse seguimento API, entregando HTML. Um entregando Json ou respeitando o Accept, a negociação de conteúdo e a outra entregando HTML.
+
+[0:47] Mas, pensa comigo, quando você faz o deploy, esse projeto vai ser publicado no servidor Web, como um processo único e essa API e essa aplicação com layout, com essa interface do usuário, ela pode evoluir separadamente, ela pode ter ciclos de vida completamente diferentes. Você pode querer mudar determinado layout, enquanto que a API não muda. E, para isso, você vai ter que baixar a API para poder fazer essa modificação.
+
+[1:24] Então, nós temos, ainda, a API acoplada à parte de interface com o usuário e nesse vídeo aqui eu vou aproveitar já que a gente já aprendeu a separar o serviço de autenticação de geração de Token, a gente vai separar, também, agora, o serviço de API.
+
+[1:42] Isso é justamente o que acontece com as arquiteturas distribuídas. Nós temos vários serviços, cada um servindo, expondo determinados endpoints então essa é uma arquitetura chamada de arquitetura em microsserviços. Tem vários servicinhos, cada um deles expondo determinadas partes da sua aplicação.
+
+[2:07] Então vamos fazer isso aqui nesse vídeo.
+
+[2:08] Eu vou criar um novo projeto Aspnet Core, vou chamar esse cara de Alura Web API e API, ok? Vou dar aqui ok de novo, vazio, não quero que ele seja HTTPS, porque eu estou aqui localmente, é claro que é importante para a segurança você trabalhar com HTTPS ou então, agora, o novo padrão aí que está sendo falado é o TLS.
+
+[2:43] Esse projeto aqui, API, eu também não quero usar o IS eu quero usar ele como se fosse uma aplicação terminal. E outra coisa que eu preciso mudar, vou aqui em propriedade na parte de depuração, não vou iniciar navegador e também vou tirar, vou mudar aqui a porta já que a porta do provedor de autenticação é cinco mil, vou botar seis mil aqui. Com isso, agora eu consigo rodar a minha API. Vai aparecer aqui um terminal, mostrando que esse cara está pronto para receber requisições HTTP.
+
+[3:29] Mas, antes, para receber aquisições HTTP, eu preciso configurar algumas coisas. Eu preciso copiar, justamente, os meus dois controladores que expõe os recursos Livros e Lista de Leitura. Vou copiar esse cara aqui, vou mandar para cá, aqui eu vou criar uma pasta chamada Controllers e aqui dentro eu vou passar, vou colar esses dois caras aqui. Tudo bem gente?
+
+[4:03] Vou aproveitar para mudar aqui o namespace só para poder ficar compatível com o que nós estamos utilizando aí, Leitura, API, Controllers, vou usar esse namespace e vou usar esse cara aqui também, para cá. Está com uma porção de erros aqui, porque justamente, eu preciso... esse projeto depende de algumas classes que não estão definidas aqui, estão definidos nos projetos que são as bibliotecas de classe.
+
+[4:32] Então aqui em dependências eu vou adicionar, tanto a persistência de Livros, quanto o modelo com as classes e tipos relativos a Livros.
+
+[4:43] Com isso, agora as minhas classes começam a funcionar. Eu preciso também, para finalizar a parte de API aqui, eu preciso trazer para cá também o formatador de CSV, lembram disso? Vou colar esse cara aqui, também quero mudar aqui o nome para... vou mudar para esse nome aqui API Formatters, ok, muito bem.
+
+[5:18] Só que agora, gente, os meus controladores precisam de um repositório, repositório de Livro. Então agora eu preciso ir lá na classe de Startup, nessa classe de Startup aqui, eu preciso configurar os serviços para injetar tanto a parte de persistência como outras coisas do MVC.
+
+[5:41] Então, eu vou aproveitar e abrir essa classe Startup aqui e vou copiar descaradamente o código que está aqui, ok? Não contem para ninguém. Vou importar aqui esse Namespace, que mais eu preciso fazer? Preciso pegar essa parte de persistência, da persistência de Livros, vou também adicionar esses Namespaces, que mais? Não preciso do contexto de autenticação, não preciso de Identity, não preciso configurar também o Cookie, mas preciso injetar esses dois caras aqui. Então vamos lá.
+
+[6:29] Então adicionei esses caras e agora preciso adicionar também esse aqui, preciso dos modelos, ótimo, agora eu tenho os serviços configurados. Última coisa que eu preciso fazer é usar autenticação, vou usar autenticação e usar o MVC, usar o MVC. Deixa eu apagar isso aqui, já posso começar a pensar em testar, acho que está faltando uma modificação aqui que é, justamente, configurar a ConnectionString.
+
+[7:16] Então, vamos lá, novo item, vou adicionar um arquivo de configuração onde eu vou usar a ConnectionString que está aqui, Lista de Leitura. Ctrl+C e vou botar ela aqui. Isso, Startup... a última coisa que está faltando gente aqui é o seguinte... não é esse Startup, é esse cara aqui... a última coisa que está faltando é como eu vou usar a autenticação, eu preciso configurar autenticação na minha API que agora é via Token. Eu não configurei isso aqui. O código, é aquele código grande e como eu já apaguei eu deixei separado aqui no notepad, mas é um código que a gente já conversou, então eu vou só copiar e vou colar ele aqui. Para isso, eu preciso adicionar esses caras aqui, importar esses Namespaces, eu acho que eu já consigo agora testar esses caras.
+
+[8:20] Bom, primeira coisa então, deixa eu dar um Ctrl+Shift+B, para ver se está tudo funcionando, tudo copilando, vou rodar a API, vou deixar ela rodando aí no terminal, está servindo aqui no seis mil. Vou agora rodar esse cara aqui com o provider, também vai ficar escutando na porta cinco mil e vou deixar também o WebApp rodando esse cara via Isexpress. Está lá rodando bonitinho.
+
+[8:57] Então, posso agora testar com Postman para ver se vai, se a gente vai conseguir acessar esses caras. Primeira coisa, pegar o Endpoint, desculpa, pegar o Token, fazer o login usando as minhas credenciais um, dois, três, fazer o send. Peguei um Token, vou copiar esse cara e agora eu vou recuperar um Livro já usando a minha nova, meu novo endereço: Localhost seis mil API. Vou copiar agora, colocar no Token novo aqui, send, então eu enviei agora para o novo serviço seis mil e pedi um Livro e ele respondeu autenticando via Token. Vocês vão poder ver também, o meu cara rodando.
+
+[9:59] Então, agora eu tenho as três aplicações, cada uma vai poder com a sua responsabilidade e eu posso agora evoluir a API separadamente da minha aplicação tradicional WebApp.
+
+[10:14] Então, vamos para o exercício e eu aguardo você no vídeo final. Abraço.
+
+
+
+
+
+
+

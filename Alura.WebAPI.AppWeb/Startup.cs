@@ -17,24 +17,20 @@ namespace Alura.WebAPI.AppWeb
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
             services.AddDbContext<LeituraContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("ListaLeitura"));
             });
-
-            services.AddDbContext<AuthDbContext>(options => {
+           
+            services.AddDbContext<AuthDbContext>(options =>
+            {
                 options.UseSqlServer(Configuration.GetConnectionString("AuthDB"));
             });
 
@@ -56,7 +52,8 @@ namespace Alura.WebAPI.AppWeb
                 options.OutputFormatters.Add(new LivroCsvFormatters()); 
             }).AddXmlSerializerFormatters();
 
-
+            //services.AddControllersWithViews();
+            /* Opção alterada para --> AluraWebApi.AuthProvider
             //Injeção de dependencia JwToken
             services.AddAuthentication(options => {
                 options.DefaultAuthenticateScheme = "JwtBearer"; //Portador do Json Web Token => exemplo Frodo do filme o Senhor dos Aneis
@@ -77,6 +74,7 @@ namespace Alura.WebAPI.AppWeb
                     ValidAudience = "Postman",
                 };
             });
+            */
         }
 
 
@@ -87,24 +85,21 @@ namespace Alura.WebAPI.AppWeb
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+
+            //else
+            //{
+            //    app.UseExceptionHandler("/Home/Error");
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
 
 
             app.UseStaticFiles();
             app.UseAuthentication();
-
-
 
             app.UseEndpoints(endpoints =>
             {
