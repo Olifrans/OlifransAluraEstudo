@@ -176,4 +176,56 @@ Mover os controladores com seus endpoints para o projeto.
 
 
 
+04 - Arquiteturas distribuídas
+
+Durante o curso, vimos como funcionam as arquiteturas distribuídas, que são amplamente utilizadas no mercado. Será que você lembra o que isso quer dizer?
+
+Selecione uma alternativa
+
+Em arquiteturas distribuídas, nós temos vários serviços, onde cada serviço serve determinada endpoint. Também conhecido como microserviços.
+
+
+
+
+
+05 - Conclusão
+
+[0:00] Muito bem pessoal. Então esse é o nosso último vídeo do curso. Ah, que pena. E eu queria fazer aqui, rapidamente, uma consolidação do que a gente aprendeu, uma recapitulação do que nós aprendemos.
+
+[0:13] Então, a gente como ponto de partida, a gente trouxe uma aplicação Web MVC tradicional que vocês estão acostumados a fazer, vocês aprenderam nos cursos anteriores. Essa aplicação é uma aplicação autocontida, tinha todas as responsabilidades de uma aplicação ali, persistência, segurança, apresentação, regras de negócios e tudo mais.
+
+[0:39] E a gente começou a migrar isso para uma aplicação Web API, que a solução é dividida em serviços, que tem responsabilidades distintas. No final do curso a gente teve três aplicações, sendo que dois serviços, um serviço de segurança e outro com API propriamente dita.
+
+[1:01] O objetivo dessa ideia é integrar com outras aplicações e aí nós movimentamos e criamos essa API para seguir um estilo arquitetural REST, Representational State Transfer, onde aplicações estão sempre trocando de estado a partir da troca de informações e suas representações.
+
+[1:32] E aí, essas aplicações, na prática, isso aqui tudo são aplicações Web, todas num modelo, num protocolo HTTP e na prática, uma aplicação tradicional, ela tem como resposta a entrega HTML e esse HTML define um layout específico, porque o foco é um navegador, uma aplicação que é navegador e usuário final.
+
+[1:59] Já numa solução voltada para serviços, voltada para REST, as repostas entregam o que foi negociado em geral Json, XML, mas pode ser o que foi negociado, a gente viu um exemplo lá o CSV. E os Status Code nas respostas são adequados a operação que foi pedida. A gente viu que tem o duzentos, duzentos e um, duzentos e três, porque o foco já não é mais o usuário final e sim desenvolvedor de aplicações distintas.
+
+[2:32] As requisições no modelo MVC, elas são rotas tradicionais, típicas de uma aplicação Aspnet MVC, é onde nós temos o controlador como primeiro seguimento, segundo seguimento Action, terceiro seguimento opcional um ID. Em geral, os métodos da requisição ou é GET ou é POST.
+
+[2:54] Já numa Web API, as requisições elas são formadas por verbos HTTP mais a URI que representa o recurso que está sendo exposto. Então, tipicamente, você tem o verbo GET, POST, PUT, DELETE, que nós vimos nesse curso, como primeiro seguimento sendo o controlador da API e o terceiro seguimento sendo o identificador desse recurso, também é opcional.
+
+[3:30] No final do curso a gente viu a parte de segurança, a gente colocou, a gente protegeu os nossos controladores de API, a gente mudou, migrou, transformou nossa aplicação de uma segurança baseada em Cookie, com sessão, tudo mais. Que tinha acoplamento baseado, justamente, na sessão que ficava armazenado no servidor, onde a identidade e os direitos ficavam separados, uma parte, o identificador era entregue via Cookies na requisição e outra parte ficava no servidor.
+
+[4:06] A gente transformou isso para uma segurança baseada em Tokens, onde a identidade e os direitos, os claims eles ficam no próprio Token, esse Token é enviado a cada requisição. E um exemplo de Token é o Json Web Token, tudo bem?
+
+[4:23] Então foi isso que a gente aprendeu nesse curso, esse curso é apenas uma introdução as API, Web API com Aspnet. Espero que vocês tenham gostado, se você chegou até aqui, parabéns. E agora, eu vejo você no próximo curso.
+
+
+
+
+
+
+06 - Consolidando o seu conhecimento
+PRÓXIMA ATIVIDADE
+
+Chegou a hora de você seguir todos os passos realizados por mim durante esta aula. Caso já tenha feito, excelente. Se ainda não, é importante que você execute o que foi visto nos vídeos para poder continuar com os próximos cursos que tenham este como pré-requisito.
+
+
+
+
+
+07 - O que aprendemos?
+Nessa aula nós aprendemos a separar os projetos em nossa solução. Os motivos para isso são isolar melhor as responsabilidades de cada aplicação, favorecer que cada aplicação evolua independentemente (inclusive por equipes diferentes) e permitir a publicação das aplicações em servidores diferentes.
 
