@@ -30,7 +30,6 @@ namespace Alura.WebAPI.AppWeb
         {
             services.AddControllersWithViews();
 
-
             services.AddDbContext<LeituraContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("ListaLeitura"));
             });
@@ -68,6 +67,7 @@ namespace Alura.WebAPI.AppWeb
                     ValidateIssuer = true, //Juiz que validar
                     ValidateAudience = true, //Quem esta pedido
                     ValidateLifetime = true, //Tempo de expiração
+                    ValidateIssuerSigningKey = true, //Validação da chave
 
                     //Chave de assinatura que sera usada para validar no Juiz
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("olifrans_estudo_webapi_authentication_valid")),
